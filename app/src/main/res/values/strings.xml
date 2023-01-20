@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">GetFitness</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="common_email">Email</string>
+    <string name="common_password">Password</string>
+    <string name="fragment_login_forgot_password">Forgot Password?</string>
+    <string name="common_submit">Submit</string>
+    <string name="fragment_login_register_question">Don\'t hav an account yet? \n click here!</string>
+    <string name="common_user_name">User Name</string>
+    <string name="common_confirm_password">Confirm Password</string>
+    <string name="common_register">Register</string>
+    <string name="fragment_reset_password_message">Enter your email so we can send you an email to reset your password</string>
+    <string name="fragment_register_success_register_message">User has been registered with success!</string>
+    <string name="error_lenght_password">Password must be at least 6 characters long!</string>
+    <string name="error_invalid_email">This email is invalid!</string>
+    <string name="error_already_used_email">This email has already been used!</string>
+    <string name="error_message_for_register_user">An error occurred while registering!</string>
+    <string name="common_offline_message">You\'re Offline!</string>
+    <string name="common_empty_fields_message">Some field is empty!</string>
+    <string name="fragment_register_password_not_same">The passwords is not same!</string>
+    <string name="common_empty_field_message">The field is empty!</string>
+    <string name="fragment_reset_password_success_message">An email with password reset has been sent to you!</string>
+    <string name="common_error_message">An error hs been occurred!</string>
+</resources>

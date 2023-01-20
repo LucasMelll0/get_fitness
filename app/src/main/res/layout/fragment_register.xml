@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.authentication.register.RegisterFragment"
+    android:background="@color/on_primary">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/ic_arrow_back"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edittext_email_register"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/default_edittext_horizontal_margin"
+            android:hint="@string/common_email"
+            android:textColorHint="@color/on_secondary"
+            app:boxBackgroundColor="@color/secondary"
+            app:boxCornerRadiusBottomEnd="@dimen/default_radius"
+            app:boxCornerRadiusBottomStart="@dimen/default_radius"
+            app:boxCornerRadiusTopEnd="@dimen/default_radius"
+            app:boxCornerRadiusTopStart="@dimen/default_radius"
+            app:boxStrokeColor="@color/on_secondary"
+            app:boxStrokeWidth="0dp"
+            app:hintTextColor="@color/on_secondary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/on_secondary" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edittext_user_name_register"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_vertical_margin"
+            android:hint="@string/common_user_name"
+            android:textColorHint="@color/on_secondary"
+            app:counterEnabled="true"
+            app:counterMaxLength="30"
+            app:boxBackgroundColor="@color/secondary"
+            app:boxCornerRadiusBottomEnd="@dimen/default_radius"
+            app:boxCornerRadiusBottomStart="@dimen/default_radius"
+            app:boxCornerRadiusTopEnd="@dimen/default_radius"
+            app:boxCornerRadiusTopStart="@dimen/default_radius"
+            app:boxStrokeColor="@color/on_secondary"
+            app:boxStrokeWidth="0dp"
+            app:hintTextColor="@color/on_secondary"
+            app:layout_constraintEnd_toEndOf="@id/edittext_email_register"
+            app:layout_constraintStart_toStartOf="@id/edittext_email_register"
+            app:layout_constraintTop_toBottomOf="@id/edittext_email_register">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:textColor="@color/on_secondary" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edittext_password_register"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_vertical_margin"
+            android:hint="@string/common_password"
+            android:textColorHint="@color/on_secondary"
+            app:boxBackgroundColor="@color/secondary"
+            app:boxCornerRadiusBottomEnd="@dimen/default_radius"
+            app:boxCornerRadiusBottomStart="@dimen/default_radius"
+            app:boxCornerRadiusTopEnd="@dimen/default_radius"
+            app:boxCornerRadiusTopStart="@dimen/default_radius"
+            app:boxStrokeColor="@color/on_secondary"
+            app:boxStrokeWidth="0dp"
+            app:endIconMode="password_toggle"
+            app:endIconTint="@color/on_secondary"
+            app:hintTextColor="@color/on_secondary"
+            app:layout_constraintEnd_toEndOf="@id/edittext_email_register"
+            app:layout_constraintStart_toStartOf="@id/edittext_email_register"
+            app:layout_constraintTop_toBottomOf="@id/edittext_user_name_register">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:textColor="@color/on_secondary" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edittext_confirm_password_register"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_vertical_margin"
+            android:hint="@string/common_confirm_password"
+            android:textColorHint="@color/on_secondary"
+            app:boxBackgroundColor="@color/secondary"
+            app:boxCornerRadiusBottomEnd="@dimen/default_radius"
+            app:boxCornerRadiusBottomStart="@dimen/default_radius"
+            app:boxCornerRadiusTopEnd="@dimen/default_radius"
+            app:boxCornerRadiusTopStart="@dimen/default_radius"
+            app:boxStrokeColor="@color/on_secondary"
+            app:boxStrokeWidth="0dp"
+            app:endIconMode="password_toggle"
+            app:endIconTint="@color/on_secondary"
+            app:hintTextColor="@color/on_secondary"
+            app:layout_constraintEnd_toEndOf="@id/edittext_email_register"
+            app:layout_constraintStart_toStartOf="@id/edittext_email_register"
+            app:layout_constraintTop_toBottomOf="@id/edittext_password_register">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:textColor="@color/on_secondary" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_submit_register"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/default_button_height"
+            app:layout_constraintTop_toBottomOf="@id/edittext_confirm_password_register"
+            app:layout_constraintStart_toStartOf="@id/edittext_confirm_password_register"
+            app:layout_constraintEnd_toEndOf="@id/edittext_confirm_password_register"
+            android:layout_marginTop="@dimen/default_vertical_margin"
+            android:text="@string/common_register"
+            app:cornerRadius="@dimen/default_radius"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.core.widget.NestedScrollView>
