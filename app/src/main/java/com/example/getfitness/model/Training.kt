@@ -1,9 +1,10 @@
 package com.example.getfitness.model
 
-import java.sql.Timestamp
+import com.google.firebase.Timestamp
 
 data class Training(
-    val name: String,
+    val name: Number,
     val description: String,
-    val date: Timestamp
+    val date: Timestamp,
+    val author: String = ""
 )

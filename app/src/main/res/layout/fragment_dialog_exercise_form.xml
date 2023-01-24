@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        app:cardCornerRadius="@dimen/default_radius"
+        app:cardElevation="@dimen/cardview_default_elevation"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@color/secondary">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageview_exercise_form_dialog_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_image_height"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@tools:sample/backgrounds/scenic" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_negative_margin"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/default_radius"
+                app:cardElevation="@dimen/cardview_default_elevation"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageview_exercise_form_dialog_fragment">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/edittext_observations_exercise_form"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/default_edittext_horizontal_margin"
+                        android:layout_marginTop="@dimen/default_vertical_margin"
+                        android:hint="@string/common_observations"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="250"
+                        android:textColorHint="@color/on_secondary"
+                        app:boxBackgroundColor="@color/secondary"
+                        app:boxCornerRadiusBottomEnd="@dimen/default_radius"
+                        app:boxCornerRadiusBottomStart="@dimen/default_radius"
+                        app:boxCornerRadiusTopEnd="@dimen/default_radius"
+                        app:boxCornerRadiusTopStart="@dimen/default_radius"
+                        app:boxStrokeColor="@color/on_secondary"
+                        app:boxStrokeWidth="0dp"
+                        app:errorEnabled="true"
+                        app:hintTextColor="@color/on_secondary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textMultiLine"
+                            android:textColor="@color/on_secondary" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/_divider"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/default_horizontal_margin"
+                        android:layout_marginTop="@dimen/default_vertical_margin"
+                        app:dividerColor="@color/primary_variant"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/edittext_observations_exercise_form" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_cancel_exercise_form"
+                        style="@style/Widget.Material3.Button.IconButton.Outlined"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/default_button_height"
+                        android:layout_margin="@dimen/default_margin"
+                        android:text="@string/common_cancel"
+                        android:textSize="@dimen/default_text_size"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/button_confirm_exercise_form"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/_divider"
+                        app:strokeColor="@color/primary" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_confirm_exercise_form"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/default_button_height"
+                        android:layout_marginEnd="@dimen/default_horizontal_margin"
+                        android:text="@string/common_confirm"
+                        android:textColor="@color/on_primary"
+                        android:textSize="@dimen/default_text_size"
+                        app:cornerRadius="@dimen/default_radius"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/button_cancel_exercise_form"
+                        app:layout_constraintTop_toTopOf="@id/button_cancel_exercise_form"
+                        app:layout_constraintWidth_percent="0.55" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </com.google.android.material.card.MaterialCardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

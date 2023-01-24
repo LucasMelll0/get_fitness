@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/on_primary"
+    android:fillViewport="true"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.form.TrainingFormFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_form_training"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/on_primary"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="New Training"
+            app:titleCentered="true"
+            app:titleTextColor="@color/primary_variant"
+            app:navigationIcon="@drawable/ic_arrow_back"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edittext_description_training_form"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="400"
+            app:errorEnabled="true"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/default_edittext_horizontal_margin"
+            android:layout_marginTop="@dimen/default_vertical_margin"
+            android:hint="@string/common_description"
+            android:textColorHint="@color/on_secondary"
+            app:boxBackgroundColor="@color/secondary"
+            app:boxCornerRadiusBottomEnd="@dimen/default_radius"
+            app:boxCornerRadiusBottomStart="@dimen/default_radius"
+            app:boxCornerRadiusTopEnd="@dimen/default_radius"
+            app:boxCornerRadiusTopStart="@dimen/default_radius"
+            app:boxStrokeColor="@color/on_secondary"
+            app:boxStrokeWidth="0dp"
+            app:hintTextColor="@color/on_secondary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_form_training">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:maxLength="500"
+                android:textColor="@color/on_secondary" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edittext_date_training_form"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/default_edittext_horizontal_margin"
+            android:layout_marginTop="@dimen/default_vertical_margin"
+            android:enabled="false"
+            android:hint="@string/common_date"
+            app:errorEnabled="true"
+            android:textColorHint="@color/on_secondary"
+            app:boxBackgroundColor="@color/secondary"
+            app:boxCornerRadiusBottomEnd="@dimen/default_radius"
+            app:boxCornerRadiusBottomStart="@dimen/default_radius"
+            app:boxCornerRadiusTopEnd="@dimen/default_radius"
+            app:boxCornerRadiusTopStart="@dimen/default_radius"
+            app:boxStrokeColor="@color/on_secondary"
+            app:boxStrokeWidth="0dp"
+            app:hintTextColor="@color/on_secondary"
+            app:layout_constraintWidth_percent="0.6"
+            app:layout_constraintEnd_toStartOf="@id/button_set_date_training_form"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edittext_description_training_form">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="datetime"
+                android:maxLines="7"
+                android:textColor="@color/on_secondary" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_set_date_training_form"
+            android:layout_width="0dp"
+            app:icon="@drawable/ic_date"
+            android:foregroundGravity="center"
+            app:cornerRadius="@dimen/default_radius"
+            android:contentDescription="@string/fragment_training_form_button_date_content_description"
+            android:layout_marginEnd="@dimen/default_horizontal_margin"
+            android:layout_height="@dimen/default_button_height"
+            app:layout_constraintTop_toTopOf="@id/edittext_date_training_form"
+            app:layout_constraintStart_toEndOf="@id/edittext_date_training_form"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_add_exercise"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/default_button_height"
+            android:layout_marginTop="@dimen/default_vertical_margin"
+            android:text="@string/fragment_training_form_add_text"
+            app:cornerRadius="@dimen/default_radius"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/edittext_date_training_form"
+            app:layout_constraintStart_toStartOf="@id/edittext_date_training_form"
+            app:layout_constraintTop_toBottomOf="@id/edittext_date_training_form"
+            app:layout_constraintVertical_bias="0" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview_exercises_training_form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_add_exercise"
+            tools:listitem="@layout/item_exercise_training_form" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

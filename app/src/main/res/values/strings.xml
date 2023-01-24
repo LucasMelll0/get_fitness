@@ -32,4 +32,8 @@
     <string name="common_confirm">Confirm</string>
     <string name="common_permission_denied">Permission denied</string>
     <string name="common_field_required">This field required</string>
+    <string name="datepicker_title">Select a date for this training</string>
+    <string name="fragment_training_form_button_date_content_description">Select date button</string>
+    <string name="fragment_training_form_training_save_success">Successfully save training!</string>
+    <string name="fragment_training_form_save_error">An error occurred while saving the training!</string>
 </resources>
