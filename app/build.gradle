@@ -44,6 +44,7 @@ dependencies {
 
     // Data persistence on Cloud
     implementation 'com.google.firebase:firebase-firestore-ktx:24.4.2'
+    implementation 'com.google.firebase:firebase-storage-ktx:20.1.0'
 
 
     // App Navigation
