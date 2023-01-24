@@ -12,8 +12,7 @@ class RegisterViewModel(
         user: User,
         onSuccess: () -> Unit = {},
         onError: (error: String) -> Unit = {},
-        onOffline: () -> Unit = {}
     ) {
-        repository.register(user, onSuccess, onError, onOffline)
+        repository.register(user, onSuccess, onError)
     }
 }

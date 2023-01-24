@@ -11,9 +11,8 @@ class ResetPasswordViewModel(
         email: String,
         onSuccess: () -> Unit = {},
         onError: () -> Unit = {},
-        onOffline: () -> Unit = {}
     ) {
-        repository.sendPasswordResetEmail(email, onSuccess, onError, onOffline)
+        repository.sendPasswordResetEmail(email, onSuccess, onError)
     }
 
 }

@@ -15,7 +15,7 @@ val authModule = module {
     }
 
     single {
-        AccountRepository(get(), get())
+        AccountRepository(get())
     }
 
     viewModel {

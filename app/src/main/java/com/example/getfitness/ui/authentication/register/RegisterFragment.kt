@@ -10,6 +10,7 @@ import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentRegisterBinding
 import com.example.getfitness.extensions.goToBack
 import com.example.getfitness.model.User
+import com.example.getfitness.utils.checkConnection
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -37,37 +38,39 @@ class RegisterFragment : Fragment() {
         val registerButton = binding.buttonSubmitRegister
         registerButton.setOnClickListener {
             if (noEmptyFields() && samePasswords()) {
-                registerUser()
+                tryRegisterUser()
             }
         }
     }
 
-    private fun registerUser() {
+    private fun tryRegisterUser() {
         val name = binding.edittextUserNameRegister.editText!!.text.toString().trim()
         val email = binding.edittextEmailRegister.editText!!.text.toString().trim()
         val password = binding.edittextPasswordRegister.editText!!.text.toString().trim()
         val user = userFactory(name, email, password)
-        viewModel.register(
-            user,
-            onSuccess = {
-                Snackbar.make(
-                    requireView(),
-                    getString(R.string.fragment_register_success_register_message),
-                    Snackbar.LENGTH_SHORT
-                ).show()
-                goToBack()
-            },
-            onError = {
-                errorHandler(it)
-            },
-            onOffline = {
-                Snackbar.make(
-                    requireView(),
-                    getString(R.string.common_offline_message),
-                    Snackbar.LENGTH_LONG
-                ).show()
-            }
-        )
+        val connected = checkConnection(requireContext())
+        if (connected) {
+            viewModel.register(
+                user,
+                onSuccess = {
+                    Snackbar.make(
+                        requireView(),
+                        getString(R.string.fragment_register_success_register_message),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                    goToBack()
+                },
+                onError = {
+                    errorHandler(it)
+                }
+            )
+        }else {
+            Snackbar.make(
+                requireView(),
+                getString(R.string.common_offline_message),
+                Snackbar.LENGTH_LONG
+            ).show()
+        }
     }
 
     private fun errorHandler(error: String) {

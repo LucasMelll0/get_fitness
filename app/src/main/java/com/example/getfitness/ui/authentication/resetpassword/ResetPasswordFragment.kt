@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentResetPasswordBinding
 import com.example.getfitness.extensions.goToBack
+import com.example.getfitness.utils.checkConnection
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -50,30 +51,32 @@ class ResetPasswordFragment : Fragment() {
 
     private fun sendPasswordResetEmail() {
         val email = binding.edittextEmailResetPassword.editText!!.text.toString().trim()
-        viewModel.sendPasswordResetEmail(
-            email,
-            onSuccess = {
-                Snackbar.make(
-                    requireView(),
-                    getString(R.string.fragment_reset_password_success_message),
-                    Snackbar.LENGTH_SHORT
-                ).show()
-            },
-            onError = {
-                Snackbar.make(
-                    requireView(),
-                    getString(R.string.common_error_message),
-                    Snackbar.LENGTH_SHORT
-                ).show()
-            },
-            onOffline = {
-                Snackbar.make(
-                    requireView(),
-                    getString(R.string.common_offline_message),
-                    Snackbar.LENGTH_SHORT
-                ).show()
-            }
-        )
+        val connected = checkConnection(requireContext())
+        if (connected) {
+            viewModel.sendPasswordResetEmail(
+                email,
+                onSuccess = {
+                    Snackbar.make(
+                        requireView(),
+                        getString(R.string.fragment_reset_password_success_message),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                },
+                onError = {
+                    Snackbar.make(
+                        requireView(),
+                        getString(R.string.common_error_message),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+            )
+        }else {
+            Snackbar.make(
+                requireView(),
+                getString(R.string.common_offline_message),
+                Snackbar.LENGTH_SHORT
+            ).show()
+        }
     }
 
     private fun noEmptyField(): Boolean {

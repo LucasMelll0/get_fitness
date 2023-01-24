@@ -12,8 +12,7 @@ class LoginViewModel(
         user: User,
         onSuccess: () -> Unit = {},
         onError: () -> Unit = {},
-        onOffline: () -> Unit = {}
     ) {
-        repository.connect(user, onSuccess, onError, onOffline)
+        repository.connect(user, onSuccess, onError)
     }
 }

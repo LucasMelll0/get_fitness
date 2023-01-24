@@ -21,4 +21,15 @@
     <string name="common_empty_field_message">The field is empty!</string>
     <string name="fragment_reset_password_success_message">An email with password reset has been sent to you!</string>
     <string name="common_error_message">An error hs been occurred!</string>
+    <string name="content_description_float_action_button">Add Button</string>
+    <string name="common_name">Name</string>
+    <string name="common_description">Description</string>
+    <string name="fragment_training_form_add_text">Add Exercise</string>
+    <string name="common_date">Date</string>
+    <string name="fragment_feed_get_trainings_error">There was an error getting your trainings</string>
+    <string name="common_observations">Observations</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="common_confirm">Confirm</string>
+    <string name="common_permission_denied">Permission denied</string>
+    <string name="common_field_required">This field required</string>
 </resources>

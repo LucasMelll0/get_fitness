@@ -73,7 +73,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
+                android:inputType="textCapWords"
                 android:textColor="@color/on_secondary" />
         </com.google.android.material.textfield.TextInputLayout>
 

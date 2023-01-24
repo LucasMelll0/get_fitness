@@ -10,6 +10,7 @@ import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentLoginBinding
 import com.example.getfitness.extensions.goTo
 import com.example.getfitness.model.User
+import com.example.getfitness.utils.checkConnection
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -43,33 +44,35 @@ class LoginFragment : Fragment() {
         val submitButton = binding.buttonSubmit
         submitButton.setOnClickListener {
             if (noEmptyFields()) {
-                connectUser()
+                tryConnectUser()
             }
         }
     }
 
-    private fun connectUser() {
+    private fun tryConnectUser() {
         val email = binding.edittextEmailLogin.editText!!.text.toString().trim()
         val password = binding.edittextPasswordLogin.editText!!.text.toString().trim()
         val user = userFactory(email, password)
-        viewModel.connect(
-            user,
-            onSuccess = { Log.i("Teste", "connectUser: SUCESSO") },
-            onError = {
-                Snackbar.make(
-                    requireView(),
-                    getString(R.string.common_error_message),
-                    Snackbar.LENGTH_SHORT
-                ).show()
-            },
-            onOffline = {
-                Snackbar.make(
-                    requireView(),
-                    getString(R.string.common_offline_message),
-                    Snackbar.LENGTH_SHORT
-                ).show()
-            }
+        val connected = checkConnection(requireContext())
+        if (connected){
+            viewModel.connect(
+                user,
+                onSuccess = { Log.i("Teste", "connectUser: SUCESSO") },
+                onError = {
+                    Snackbar.make(
+                        requireView(),
+                        getString(R.string.common_error_message),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
             )
+        }else {
+            Snackbar.make(
+                requireView(),
+                getString(R.string.common_offline_message),
+                Snackbar.LENGTH_SHORT
+            ).show()
+        }
     }
 
     private fun userFactory(email: String, password: String): User =
