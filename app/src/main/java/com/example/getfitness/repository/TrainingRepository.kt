@@ -26,4 +26,13 @@ class TrainingRepository(
         firebaseHelper.saveTraining(training, exercises, onSuccess, onError)
     }
 
+    fun getTrainingByName(
+        userId: String,
+        name: Number,
+        onSuccess: (training: Training, exercises: List<Exercise>) -> Unit,
+        onError: () -> Unit = {}
+    ) {
+        firebaseHelper.getTrainingByName(userId, name, onSuccess, onError)
+    }
+
 }

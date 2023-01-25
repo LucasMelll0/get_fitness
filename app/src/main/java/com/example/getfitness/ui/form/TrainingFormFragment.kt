@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentTrainingFormBinding
@@ -22,6 +23,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -32,6 +34,9 @@ class TrainingFormFragment : Fragment() {
     private val binding get() = _binding!!
     private val adapter: ExerciseFormAdapter by inject()
     private val viewModel: TrainingFormViewModel by viewModel()
+    private val args: TrainingFormFragmentArgs by navArgs()
+    private val currentUser: FirebaseUser? by inject()
+    private var trainingId: Number? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,9 +50,41 @@ class TrainingFormFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setsUpToolbar()
         setsUpButtonAddExercise()
-        FirebaseAuth.getInstance().signInWithEmailAndPassword("lucasmellorodrigues2012@gmail.com", "teste123")
+        checkArgs()
+    }
 
+    private fun checkArgs() {
+        args.trainingName.also {
+            if (it > 1) {
+                trainingId = it
+                getTraining()
+            }
+        }
+    }
 
+    private fun getTraining() {
+        currentUser?.let { user ->
+            viewModel.getByTrainingName(
+                user.uid,
+                trainingId!!,
+                onSuccess = {
+                    fillDescription(it)
+                },
+                onError = {
+                    Snackbar.make(
+                        requireView(),
+                        getString(R.string.common_get_training_error),
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                    goToBack()
+                }
+            )
+        }
+    }
+
+    private fun fillDescription(description: String) {
+        val editTextObservations = binding.edittextDescriptionTrainingForm.editText
+        editTextObservations?.setText(description)
     }
 
     private fun setsUpDateInput() {
@@ -81,6 +118,13 @@ class TrainingFormFragment : Fragment() {
         super.onResume()
         setsUpDateInput()
         setsUpRecyclerView()
+        setsUpAdapterRemoveFunction()
+    }
+
+    private fun setsUpAdapterRemoveFunction() {
+        adapter.onClickRemove = {
+            viewModel.removeExercise(it)
+        }
     }
 
     private fun setsUpButtonAddExercise() {
@@ -146,7 +190,7 @@ class TrainingFormFragment : Fragment() {
                         }
                     )
                 }
-            }else {
+            } else {
                 Snackbar.make(
                     requireView(),
                     getString(R.string.common_offline_message),

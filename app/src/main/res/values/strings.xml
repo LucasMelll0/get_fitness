@@ -36,4 +36,6 @@
     <string name="fragment_training_form_button_date_content_description">Select date button</string>
     <string name="fragment_training_form_training_save_success">Successfully save training!</string>
     <string name="fragment_training_form_save_error">An error occurred while saving the training!</string>
+    <string name="item_exercise_button_remove_description">remove exercise</string>
+    <string name="common_get_training_error">There was an error getting the training</string>
 </resources>

@@ -5,5 +5,5 @@ import android.net.Uri
 data class Exercise(
     val name: Number,
     var image: Uri? = null,
-    val observations: String
+    val observations: String,
 )

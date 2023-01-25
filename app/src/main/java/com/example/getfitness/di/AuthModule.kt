@@ -15,6 +15,10 @@ val authModule = module {
     }
 
     single {
+        FirebaseAuth.getInstance().currentUser
+    }
+
+    single {
         AccountRepository(get())
     }
 

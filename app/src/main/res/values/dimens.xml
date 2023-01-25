@@ -6,10 +6,12 @@
     <dimen name="default_edittext_horizontal_margin">40dp</dimen>
     <dimen name="default_radius">24dp</dimen>
     <dimen name="default_text_size">18sp</dimen>
+    <dimen name="medium_text_size">20sp</dimen>
     <dimen name="big_text_size">24sp</dimen>
     <dimen name="default_button_height">60dp</dimen>
     <dimen name="line_height">1dp</dimen>
     <dimen name="default_image_height">300dp</dimen>
+    <dimen name="big_image_height">400dp</dimen>
     <dimen name="default_negative_margin">-24dp</dimen>
     <dimen name="recyclerview_height_exercise_form">200dp</dimen>
 </resources>

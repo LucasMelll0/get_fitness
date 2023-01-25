@@ -13,9 +13,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
-import coil.load
 import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentDialogExerciseFormBinding
+import com.example.getfitness.extensions.tryToLoadImage
 import com.example.getfitness.model.Exercise
 import kotlin.random.Random
 
@@ -33,7 +33,7 @@ class ExerciseFormDialogFragment(
     private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
             imageUri = it
-            binding.imageviewExerciseFormDialogFragment.load(uri)
+            binding.imageviewExerciseFormDialogFragment.tryToLoadImage(uri)
         }
     }
     private val requestPermission = registerForActivityResult(

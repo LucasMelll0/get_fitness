@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
 import com.example.getfitness.databinding.ItemExerciseTrainingFormBinding
+import com.example.getfitness.extensions.tryToLoadImage
 import com.example.getfitness.model.Exercise
 
 class ExerciseFormAdapter(
@@ -35,7 +35,7 @@ class ExerciseFormAdapter(
             val textviewObservations = binding.textviewObservationsExerciseTrainingForm
             val buttonRemove = binding.buttonRemoveExerciseTrainingForm
             exercise.apply {
-                imageviewExercise.load(this.image)
+                imageviewExercise.tryToLoadImage(this.image)
                 textviewObservations.text = this.observations
             }
             buttonRemove.setOnClickListener {

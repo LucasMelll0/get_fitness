@@ -35,5 +35,29 @@ class TrainingFormViewModel(
         _exercises.postValue(newList)
     }
 
+    fun removeExercise(exercise: Exercise) {
+        val newList = _exercises.value?.map { it.copy() }?.toMutableList() ?: mutableListOf()
+        newList.remove(exercise)
+        _exercises.postValue(newList)
+    }
+
     private fun getExercises(): List<Exercise> = _exercises.value ?: emptyList()
+
+    fun getByTrainingName(
+        userId: String,
+        name: Number,
+        onSuccess: (description: String) -> Unit = {},
+        onError: () -> Unit = {}
+    ) {
+        repository.getTrainingByName(
+            userId,
+            name,
+            onSuccess = { training, exercises ->
+                _exercises.postValue(exercises)
+                setDate(training.date)
+                onSuccess(training.description)
+            },
+            onError = onError
+        )
+    }
 }

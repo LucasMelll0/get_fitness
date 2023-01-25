@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph.xml"
-    app:startDestination="@id/trainingFormFragment">
+    app:startDestination="@id/trainingDetailsFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_loginFragment_to_resetPasswordFragment"
             app:destination="@id/resetPasswordFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -33,5 +36,28 @@
         android:id="@+id/trainingFormFragment"
         android:name="com.example.getfitness.ui.form.TrainingFormFragment"
         android:label="fragment_training_form"
-        tools:layout="@layout/fragment_training_form" />
+        tools:layout="@layout/fragment_training_form" >
+        <argument
+            android:name="training_name"
+            app:argType="long"
+            android:defaultValue="-1L" />
+    </fragment>
+    <fragment
+        android:id="@+id/feedFragment"
+        android:name="com.example.getfitness.ui.feed.FeedFragment"
+        android:label="fragment_feed"
+        tools:layout="@layout/fragment_feed" >
+        <action
+            android:id="@+id/action_feedFragment_to_trainingFormFragment"
+            app:destination="@id/trainingFormFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/trainingDetailsFragment"
+        android:name="com.example.getfitness.ui.details.TrainingDetailsFragment"
+        android:label="fragment_training_details"
+        tools:layout="@layout/fragment_training_details" />
 </navigation>

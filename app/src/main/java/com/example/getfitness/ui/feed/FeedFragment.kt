@@ -5,14 +5,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentFeedBinding
+import com.example.getfitness.extensions.goTo
 import com.example.getfitness.extensions.goToBack
 import com.example.getfitness.ui.feed.recyclerview.TrainingAdapter
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -22,7 +24,7 @@ class FeedFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: FeedViewModel by viewModel()
     private val adapter: TrainingAdapter by inject()
-    private val currentUser = FirebaseAuth.getInstance().currentUser
+    private val currentUser: FirebaseUser? by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +37,27 @@ class FeedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setsUpRecyclerView()
+        setsUpButtonAdd()
+    }
+
+    private fun setsUpPopBackStack() {
+        activity?.let {
+            it.onBackPressedDispatcher.addCallback(this) {
+                it.finish()
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setsUpPopBackStack()
+    }
+
+    private fun setsUpButtonAdd() {
+        val buttonAdd = binding.buttonAddTraining
+        buttonAdd.setOnClickListener {
+            goTo(R.id.action_feedFragment_to_trainingFormFragment)
+        }
     }
 
     private fun setsUpRecyclerView() {
@@ -73,7 +96,7 @@ class FeedFragment : Fragment() {
         viewModel.trainings.observe(this@FeedFragment) {
             if (it.isNotEmpty()) {
                 adapter.submitList(it)
-            }else {
+            } else {
                 Log.i("Teste", "updateRecyclerview: lista vazia")
             }
         }

@@ -1,5 +1,6 @@
 package com.example.getfitness.helper
 
+import android.net.Uri
 import android.util.Log
 import com.example.getfitness.model.Exercise
 import com.example.getfitness.model.Training
@@ -42,6 +43,46 @@ class FireStoreHelper(
 
     }
 
+    fun getTrainingByName(
+        userId: String,
+        name: Number,
+        onSuccess: (training: Training, exercises: List<Exercise>) -> Unit,
+        onError: () -> Unit = {}
+    ) {
+        val trainingRef = db.collection(TRAININGS_COLLECTION)
+            .document(name.toString()).get()
+        trainingRef.addOnSuccessListener {
+            val trainingName = it.getLong(NAME_FIELD) ?: 0
+            val trainingDescription = it.getString(DESCRIPTION_FIELD) ?: ""
+            val trainingDate = it.getTimestamp(DATE_FIELD) ?: Timestamp.now()
+            val training = Training(trainingName, trainingDescription, trainingDate, userId)
+            it.reference
+                .collection(EXERCISES_COLLECTION)
+                .whereEqualTo(AUTHOR_FIELD, userId)
+                .get().addOnSuccessListener { exerciseDocs ->
+                    val exerciseList = mutableListOf<Exercise>()
+                    for (exerciseDoc in exerciseDocs) {
+                        val exerciseName = exerciseDoc.getLong(NAME_FIELD) ?: 0
+                        val exerciseObservation = exerciseDoc.getString(OBSERVATIONS_FIELD) ?: ""
+                        val exerciseImage = exerciseDoc.getString(IMAGE_FIELD)?.let { uri ->
+                            Uri.parse(uri)
+                        }
+                        val exercise = Exercise(exerciseName, exerciseImage, exerciseObservation)
+                        exerciseList.add(exercise)
+                    }
+                    onSuccess(training, exerciseList)
+                }.addOnFailureListener { exception ->
+                    Log.w(TAG, "getTrainingByName: ", exception)
+                    onError()
+                }
+
+        }
+            .addOnFailureListener {
+                Log.w(TAG, "getTrainingByName: ", it)
+                onError()
+            }
+    }
+
     fun saveTraining(
         training: Training,
         exercises: List<Exercise>,
@@ -66,7 +107,8 @@ class FireStoreHelper(
                                         throw exception
                                     }
                             },
-                        onError = onError)
+                            onError = onError
+                        )
                     } ?: run {
                         trainingRef
                             .collection(EXERCISES_COLLECTION)
