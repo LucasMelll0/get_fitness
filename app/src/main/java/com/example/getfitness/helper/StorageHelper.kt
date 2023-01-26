@@ -1,7 +1,10 @@
 package com.example.getfitness.helper
 
 import android.net.Uri
+import android.util.Log
 import com.google.firebase.storage.StorageReference
+
+const val TAG = "StorageHelp"
 
 class StorageHelper(
     private val storageReference: StorageReference
@@ -26,5 +29,12 @@ class StorageHelper(
         }
 
         }
+    }
+
+    fun deleteImage(image: String) {
+        val imageRef = storageReference.child(image)
+        imageRef.delete()
+            .addOnSuccessListener { Log.i(TAG, "deleteImage: Image Deleted successfully") }
+            .addOnFailureListener { Log.w(TAG, "deleteImage: ", it) }
     }
 }

@@ -7,6 +7,7 @@ import com.example.getfitness.model.Training
 import com.example.getfitness.repository.*
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 
 class FireStoreHelper(
     private val db: FirebaseFirestore,
@@ -22,8 +23,13 @@ class FireStoreHelper(
             .whereEqualTo(AUTHOR_FIELD, userId)
             .addSnapshotListener { value, e ->
                 e?.let {
+                    it.message?.let { message ->
+                        if (!message.contains("Not Found")) {
+                            onError()
+                        }
+                    }
                     Log.w(TAG, "Listen Failed: ", e)
-                    onError()
+
                 } ?: run {
                     val trainings = mutableListOf<Training>()
                     for (doc in value!!) {
@@ -51,25 +57,33 @@ class FireStoreHelper(
     ) {
         val trainingRef = db.collection(TRAININGS_COLLECTION)
             .document(name.toString()).get()
-        trainingRef.addOnSuccessListener {
-            val trainingName = it.getLong(NAME_FIELD) ?: 0
-            val trainingDescription = it.getString(DESCRIPTION_FIELD) ?: ""
-            val trainingDate = it.getTimestamp(DATE_FIELD) ?: Timestamp.now()
+        trainingRef.addOnSuccessListener { trainingDoc ->
+            val trainingName = trainingDoc.getLong(NAME_FIELD) ?: 0
+            val trainingDescription = trainingDoc.getString(DESCRIPTION_FIELD) ?: ""
+            val trainingDate = trainingDoc.getTimestamp(DATE_FIELD) ?: Timestamp.now()
             val training = Training(trainingName, trainingDescription, trainingDate, userId)
-            it.reference
+            trainingDoc.reference
                 .collection(EXERCISES_COLLECTION)
                 .whereEqualTo(AUTHOR_FIELD, userId)
                 .get().addOnSuccessListener { exerciseDocs ->
                     val exerciseList = mutableListOf<Exercise>()
+                    Log.i(TAG, "getTrainingByName: ${exerciseDocs.size()}")
                     for (exerciseDoc in exerciseDocs) {
                         val exerciseName = exerciseDoc.getLong(NAME_FIELD) ?: 0
                         val exerciseObservation = exerciseDoc.getString(OBSERVATIONS_FIELD) ?: ""
                         val exerciseImage = exerciseDoc.getString(IMAGE_FIELD)?.let { uri ->
                             Uri.parse(uri)
                         }
-                        val exercise = Exercise(exerciseName, exerciseImage, exerciseObservation)
+                        val exerciseAuthor = exerciseDoc.getString(AUTHOR_FIELD) ?: ""
+                        val exercise = Exercise(
+                            exerciseName,
+                            exerciseImage,
+                            exerciseObservation,
+                            exerciseAuthor
+                        )
                         exerciseList.add(exercise)
                     }
+
                     onSuccess(training, exerciseList)
                 }.addOnFailureListener { exception ->
                     Log.w(TAG, "getTrainingByName: ", exception)
@@ -88,11 +102,10 @@ class FireStoreHelper(
         exercises: List<Exercise>,
         onSuccess: () -> Unit,
         onError: () -> Unit
-
     ) {
         val trainingRef = db.collection(TRAININGS_COLLECTION)
             .document(training.name.toString())
-        trainingRef.set(training).addOnSuccessListener {
+        trainingRef.set(training, SetOptions.merge()).addOnSuccessListener {
             for (exercise in exercises) {
                 try {
                     exercise.image?.let {
@@ -103,7 +116,8 @@ class FireStoreHelper(
                                 trainingRef
                                     .collection(EXERCISES_COLLECTION)
                                     .document(exercise.name.toString())
-                                    .set(exercise).addOnFailureListener { exception ->
+                                    .set(exercise, SetOptions.merge())
+                                    .addOnFailureListener { exception ->
                                         throw exception
                                     }
                             },
@@ -126,6 +140,88 @@ class FireStoreHelper(
             Log.w(TAG, "addTraining: ", it)
             onError()
         }
+    }
 
+    fun removeTraining(
+        userId: String,
+        trainingName: String,
+        onSuccess: () -> Unit = {},
+        onError: () -> Unit = {}
+    ) {
+        val trainingRef = db.collection(TRAININGS_COLLECTION).document(trainingName)
+        val exercisesCollection = trainingRef.collection(EXERCISES_COLLECTION)
+        exercisesCollection
+            .whereEqualTo(AUTHOR_FIELD, userId).get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    for (document in task.result!!) {
+                        val image = document.getString(IMAGE_FIELD)
+                        image?.let {
+                            storage.deleteImage(it)
+                        }
+                        document.reference.delete()
+                    }
+                    trainingRef.delete()
+                        .addOnSuccessListener { onSuccess() }
+                        .addOnFailureListener { onError() }
+                } else {
+                    onError()
+                }
+            }
+    }
+
+    fun updateTraining(
+        userId: String,
+        training: Training,
+        exercises: List<Exercise>,
+        onSuccess: () -> Unit = {},
+        onError: () -> Unit = {}
+    ) {
+        val trainingRef = db.collection(TRAININGS_COLLECTION).document(training.name.toString())
+        val exercisesCollection = trainingRef.collection(EXERCISES_COLLECTION)
+        exercisesCollection.whereEqualTo(AUTHOR_FIELD, userId).get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    for (document in task.result!!) {
+                        val name = document.getLong(NAME_FIELD) ?: 0
+                        if (exercises.none { it.name == name }) {
+                            val image = document.getString(IMAGE_FIELD)
+                            image?.let {
+                                storage.deleteImage(it)
+                            }
+                            document.reference.delete()
+                        }
+
+                    }
+                    trainingRef.set(training, SetOptions.merge()).addOnSuccessListener {
+                        for (exercise in exercises) {
+                            exercise.image?.let {
+                                storage.saveImage(
+                                    it,
+                                    onSuccess = { storageUri ->
+                                        exercise.image = storageUri
+                                        trainingRef
+                                            .collection(EXERCISES_COLLECTION)
+                                            .document(exercise.name.toString())
+                                            .set(exercise)
+                                            .addOnFailureListener { exception ->
+                                                throw exception
+                                            }
+                                    },
+                                    onError = onError
+                                )
+                            } ?: run {
+                                trainingRef
+                                    .collection(EXERCISES_COLLECTION)
+                                    .document(exercise.name.toString())
+                                    .set(exercise).addOnFailureListener { exception ->
+                                        throw exception
+                                    }
+                            }
+                        }
+                        onSuccess()
+                    }
+                }
+            }
     }
 }

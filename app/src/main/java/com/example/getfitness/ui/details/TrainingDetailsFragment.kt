@@ -2,20 +2,23 @@ package com.example.getfitness.ui.details
 
 import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentTrainingDetailsBinding
+import com.example.getfitness.extensions.goTo
 import com.example.getfitness.extensions.goToBack
 import com.example.getfitness.model.Training
+import com.example.getfitness.ui.details.bottomsheet.BottomSheetTrainingDescription
 import com.example.getfitness.ui.details.viewpager.ExerciseAdapter
-import com.example.getfitness.utils.formatTimestamp
+import com.example.getfitness.utils.checkConnection
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseUser
 import org.koin.android.ext.android.inject
@@ -30,6 +33,8 @@ class TrainingDetailsFragment : Fragment() {
     private val viewModel: TrainingDetailsViewModel by viewModel()
     private val adapter: ExerciseAdapter by inject()
     private val currentUser: FirebaseUser? by inject()
+    private val args: TrainingDetailsFragmentArgs by navArgs()
+    private var trainingId: Long? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,41 +46,78 @@ class TrainingDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        checkHasArgs()
         setsUpViewPager()
+    }
+
+
+    private fun checkHasArgs() {
+        args.trainingId.also {
+            if (it > 1) {
+                trainingId = it
+            } else {
+                goToBack()
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        getTrainingByName(1674593257447)
+        trainingId?.let {
+            getTrainingByName(it)
+        } ?: goToBack()
     }
 
     private fun getTrainingByName(name: Number) {
-        Log.i("Testes", "getTrainingByName: ")
         currentUser?.let {
-            setsUpObservers()
-            viewModel.getTrainingByName(
-                it.uid,
-                name,
-                onSuccess = {
-                    Log.i("Testes", "getTrainingByName: success")
-                },
-                onError = {
-                    Snackbar.make(
-                        requireView(),
-                        getString(R.string.common_get_training_error),
-                        Snackbar.LENGTH_LONG
-                    ).show()
-                    goToBack()
-                }
-            )
+            val connected = checkConnection(requireContext())
+            if (connected) {
+                setsUpObservers()
+                viewModel.getTrainingByName(
+                    it.uid,
+                    name,
+                    onSuccess = { date ->
+                        setsUpToolbar(date)
+                    },
+                    onError = {
+                        Snackbar.make(
+                            requireView(),
+                            getString(R.string.common_get_training_error),
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                        goToBack()
+                    }
+                )
+            } else {
+                Snackbar.make(
+                    requireView(),
+                    getString(R.string.common_offline_message),
+                    Snackbar.LENGTH_LONG
+                ).show()
+                goToBack()
+            }
+
         } ?: goToBack()
 
+    }
+
+    private fun setsUpToolbar(date: String) {
+        val toolbar = binding.toolbarTrainingDetails
+        toolbar.title = date
+        setsUpNavigationButton(toolbar)
+
+    }
+
+    private fun setsUpNavigationButton(toolbar: MaterialToolbar) {
+        toolbar.setNavigationOnClickListener {
+            goToBack()
+        }
     }
 
     private fun setsUpObservers() {
         viewModel.training.observe(this@TrainingDetailsFragment) {
             it?.let {
-                updateUI(it)
+                setsUpButtonShowDescription(it)
             }
         }
         viewModel.exercises.observe(this@TrainingDetailsFragment) {
@@ -83,15 +125,25 @@ class TrainingDetailsFragment : Fragment() {
         }
     }
 
-    private fun updateUI(training: Training) {
-        val textviewDescription = binding.textviewDescriptionTrainingDetails
-        val textviewDate = binding.textviewDateTrainingItem
-
-        training.apply {
-            textviewDescription.text = description
-            textviewDate.text = formatTimestamp(date)
+    private fun setsUpButtonShowDescription(training: Training) {
+        val buttonShowDescription = binding.buttonShowDescriptionTrainingDetails
+        buttonShowDescription.setOnClickListener {
+            setsUpBottomSheetDescription(training)
         }
     }
+
+    private fun setsUpBottomSheetDescription(training: Training) {
+        val bottomSheet = BottomSheetTrainingDescription(training.description)
+        bottomSheet.onClickEdit = {
+            val action =
+                TrainingDetailsFragmentDirections.actionTrainingDetailsFragmentToTrainingFormFragment(
+                    training.name.toLong()
+                )
+            goTo(action)
+        }
+        bottomSheet.show(childFragmentManager, BottomSheetTrainingDescription.TAG)
+    }
+
 
     private fun setsUpViewPager() {
         val viewPager = binding.viewpagerTrainingDetails

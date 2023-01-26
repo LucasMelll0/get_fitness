@@ -14,4 +14,6 @@
     <dimen name="big_image_height">400dp</dimen>
     <dimen name="default_negative_margin">-24dp</dimen>
     <dimen name="recyclerview_height_exercise_form">200dp</dimen>
+    <dimen name="default_bottom_sheet_pull_dismiss_width">50dp</dimen>
+    <dimen name="default_bottom_sheet_pull_dismiss_height">10dp</dimen>
 </resources>

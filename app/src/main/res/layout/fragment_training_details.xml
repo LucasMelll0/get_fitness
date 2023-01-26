@@ -18,56 +18,28 @@
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/ic_arrow_back"
             app:navigationIconTint="@color/primary_variant"
+            app:titleCentered="true"
+            app:titleTextColor="@color/primary_variant"
             />
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/_cardview_details"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_training_details"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_margin="@dimen/default_margin"
-            app:strokeColor="@color/secondary"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="@dimen/default_radius"
-            app:cardElevation="@dimen/cardview_default_elevation">
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/textview_description_training_details"
-                    android:layout_marginHorizontal="@dimen/default_horizontal_margin"
-                    android:layout_marginTop="@dimen/default_vertical_margin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="Treinamento de Triceps e Costas"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/default_text_size"
-                    android:textColor="@color/primary"/>
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/textview_date_training_item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="20/fev/2023"
-                    android:layout_gravity="center"
-                    android:textSize="@dimen/default_text_size"
-                    android:textStyle="italic"
-                    android:textColor="@color/primary_variant"
-                    android:layout_marginBottom="@dimen/default_vertical_margin"/>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-        </com.google.android.material.card.MaterialCardView>
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewpager_training_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/_cardview_details"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginVertical="@dimen/default_vertical_margin"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_show_description_training_details"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_button_height"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewpager_training_details"
+            app:layout_constraintVertical_bias="1"
+            android:layout_margin="@dimen/default_margin"
+            android:text="@string/fragment_training_details_button_text"
+            android:textSize="@dimen/default_text_size"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.core.widget.NestedScrollView>

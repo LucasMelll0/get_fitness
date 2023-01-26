@@ -1,18 +1,18 @@
 package com.example.getfitness.ui.feed
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentFeedBinding
 import com.example.getfitness.extensions.goTo
 import com.example.getfitness.extensions.goToBack
 import com.example.getfitness.ui.feed.recyclerview.TrainingAdapter
+import com.example.getfitness.utils.checkConnection
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseUser
 import org.koin.android.ext.android.inject
@@ -48,6 +48,12 @@ class FeedFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        setsUpTrainingsObserver()
+        tryGetAllTrainings()
+    }
+
     override fun onResume() {
         super.onResume()
         setsUpPopBackStack()
@@ -64,41 +70,51 @@ class FeedFragment : Fragment() {
         val recyclerView = binding.recyclerviewFeed
         recyclerView.also {
             it.adapter = this.adapter
-            it.layoutManager = LinearLayoutManager(requireContext())
+            it.layoutManager = StaggeredGridLayoutManager(
+                2,
+                StaggeredGridLayoutManager.VERTICAL
+            )
         }
+        setsUpAdapterOnClick()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        tryGetAllTrainings()
-
+    private fun setsUpAdapterOnClick() {
+        adapter.onClick = {
+            val action =
+                FeedFragmentDirections.actionFeedFragmentToTrainingDetailsFragment(it)
+            goTo(action)
+        }
     }
 
     private fun tryGetAllTrainings() {
         currentUser?.let {
-            viewModel.getAllTrainings(
-                it.uid,
-                onError = {
-                    Snackbar.make(
-                        requireView(),
-                        getString(R.string.fragment_feed_get_trainings_error),
-                        Snackbar.LENGTH_LONG
-                    ).show()
-                    updateRecyclerview()
-                }
-            )
+            val connected = checkConnection(requireContext())
+            if (connected) {
+                viewModel.getAllTrainings(
+                    it.uid,
+                    onError = {
+                        Snackbar.make(
+                            requireView(),
+                            getString(R.string.fragment_feed_get_trainings_error),
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                    }
+                )
+            } else {
+                Snackbar.make(
+                    requireView(),
+                    getString(R.string.common_offline_message),
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
 
         } ?: goToBack()
 
     }
 
-    private fun updateRecyclerview() {
+    private fun setsUpTrainingsObserver() {
         viewModel.trainings.observe(this@FeedFragment) {
-            if (it.isNotEmpty()) {
-                adapter.submitList(it)
-            } else {
-                Log.i("Teste", "updateRecyclerview: lista vazia")
-            }
+            adapter.submitList(it)
         }
     }
 

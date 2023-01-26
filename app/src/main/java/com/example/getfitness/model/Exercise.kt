@@ -6,4 +6,5 @@ data class Exercise(
     val name: Number,
     var image: Uri? = null,
     val observations: String,
+    val author: String
 )

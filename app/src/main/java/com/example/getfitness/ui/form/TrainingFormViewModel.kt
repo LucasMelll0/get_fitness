@@ -60,4 +60,22 @@ class TrainingFormViewModel(
             onError = onError
         )
     }
+
+    fun removeTraining(
+        userId: String,
+        trainingId: String,
+        onSuccess: () -> Unit = {},
+        onError: () -> Unit = {}
+    ) {
+        repository.removeTraining(userId, trainingId, onSuccess, onError)
+    }
+
+    fun updateTraining(
+        userId: String,
+        training: Training,
+        onSuccess: () -> Unit = {},
+        onError: () -> Unit = {}
+    ) {
+        repository.updateTraining(userId, training, getExercises(), onSuccess, onError)
+    }
 }

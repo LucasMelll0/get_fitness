@@ -10,7 +10,7 @@ import com.example.getfitness.model.Training
 import com.example.getfitness.utils.formatTimestamp
 
 class TrainingAdapter(
-    var onClick: (id: String) -> Unit = {}
+    var onClick: (id: Long) -> Unit = {}
 ) : ListAdapter<Training, TrainingAdapter.TrainingViewHolder>(differCallback) {
 
     companion object {
@@ -25,7 +25,7 @@ class TrainingAdapter(
         }
     }
 
-    class TrainingViewHolder(private val binding: ItemTrainingBinding) :
+    inner class TrainingViewHolder(private val binding: ItemTrainingBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
             fun bindItem(training: Training) {
@@ -34,6 +34,9 @@ class TrainingAdapter(
                 training.apply {
                     data.text = formatTimestamp(this.date)
                     description.text = this.description
+                }
+                binding.root.setOnClickListener {
+                    onClick(training.name.toLong())
                 }
             }
     }

@@ -38,4 +38,10 @@
     <string name="fragment_training_form_save_error">An error occurred while saving the training!</string>
     <string name="item_exercise_button_remove_description">remove exercise</string>
     <string name="common_get_training_error">There was an error getting the training</string>
+    <string name="common_edit">Edit</string>
+    <string name="fragment_training_details_button_text">Show Description</string>
+    <string name="common_delete">Delete</string>
+    <string name="fragment_training_form_alert_dialog_message">Do you really want to delete this training?</string>
+    <string name="fragment_training_form_successfully_delete_training_message">Training deleted successfully!</string>
+    <string name="fragment_training_form_delete_training_error">An error occurred while trying to delete the training</string>
 </resources>

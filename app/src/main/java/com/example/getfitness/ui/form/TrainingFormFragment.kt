@@ -1,5 +1,6 @@
 package com.example.getfitness.ui.form
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -36,7 +37,7 @@ class TrainingFormFragment : Fragment() {
     private val viewModel: TrainingFormViewModel by viewModel()
     private val args: TrainingFormFragmentArgs by navArgs()
     private val currentUser: FirebaseUser? by inject()
-    private var trainingId: Number? = null
+    private var trainingName: Number? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,7 +57,7 @@ class TrainingFormFragment : Fragment() {
     private fun checkArgs() {
         args.trainingName.also {
             if (it > 1) {
-                trainingId = it
+                trainingName = it
                 getTraining()
             }
         }
@@ -64,21 +65,32 @@ class TrainingFormFragment : Fragment() {
 
     private fun getTraining() {
         currentUser?.let { user ->
-            viewModel.getByTrainingName(
-                user.uid,
-                trainingId!!,
-                onSuccess = {
-                    fillDescription(it)
-                },
-                onError = {
-                    Snackbar.make(
-                        requireView(),
-                        getString(R.string.common_get_training_error),
-                        Snackbar.LENGTH_LONG
-                    ).show()
-                    goToBack()
-                }
-            )
+            val connected = checkConnection(requireContext())
+            if (connected) {
+                viewModel.getByTrainingName(
+                    user.uid,
+                    trainingName!!,
+                    onSuccess = {
+                        fillDescription(it)
+                    },
+                    onError = {
+                        Snackbar.make(
+                            requireView(),
+                            getString(R.string.common_get_training_error),
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                        goToBack()
+                    }
+                )
+            } else {
+                Snackbar.make(
+                    requireView(),
+                    getString(R.string.common_offline_message),
+                    Snackbar.LENGTH_LONG
+                ).show()
+                goToBack()
+            }
+
         }
     }
 
@@ -118,7 +130,14 @@ class TrainingFormFragment : Fragment() {
         super.onResume()
         setsUpDateInput()
         setsUpRecyclerView()
-        setsUpAdapterRemoveFunction()
+        setsUpConfirmButton()
+    }
+
+    private fun setsUpConfirmButton() {
+        val confirmButton = binding.buttonConfirmTrainingForm
+        confirmButton.setOnClickListener {
+            saveTraining()
+        }
     }
 
     private fun setsUpAdapterRemoveFunction() {
@@ -156,13 +175,59 @@ class TrainingFormFragment : Fragment() {
         toolbar.inflateMenu(R.menu.menu_training_form)
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.menu_item_confirm_training_form -> {
-                    saveTraining()
+                R.id.menu_item_delete_trianing_form -> {
+                    showDeleteAlertDialog()
                     true
                 }
                 else -> false
             }
         }
+    }
+
+    private fun showDeleteAlertDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setMessage(getString(R.string.fragment_training_form_alert_dialog_message))
+            .setPositiveButton(getString(R.string.common_confirm)) { _, _ ->
+                removeTraining()
+            }
+            .setNegativeButton(getString(R.string.common_cancel), null)
+        builder.show()
+    }
+
+    private fun removeTraining() {
+        trainingName?.let {
+            currentUser?.let {
+                val connected = checkConnection(requireContext())
+                if (connected) {
+                    viewModel.removeTraining(
+                        it.uid,
+                        trainingName.toString(),
+                        onSuccess = {
+                            Snackbar.make(
+                                requireView(),
+                                getString(R.string.fragment_training_form_successfully_delete_training_message),
+                                Snackbar.LENGTH_SHORT
+                            ).show()
+                            goToBack()
+                        },
+                        onError = {
+                            Snackbar.make(
+                                requireView(),
+                                getString(R.string.fragment_training_form_delete_training_error),
+                                Snackbar.LENGTH_LONG
+                            ).show()
+                        }
+                    )
+                } else {
+                    Snackbar.make(
+                        requireView(),
+                        getString(R.string.common_offline_message),
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
+
+            }
+        } ?: goToBack()
     }
 
     private fun saveTraining() {
@@ -171,24 +236,50 @@ class TrainingFormFragment : Fragment() {
             if (connected) {
                 val training = createTraining()
                 training?.let {
-                    viewModel.saveTraining(
-                        training,
-                        onSuccess = {
-                            Snackbar.make(
-                                requireView(),
-                                getString(R.string.fragment_training_form_training_save_success),
-                                Snackbar.LENGTH_LONG
-                            ).show()
-                            goToBack()
-                        },
-                        onError = {
-                            Snackbar.make(
-                                requireView(),
-                                getString(R.string.fragment_training_form_save_error),
-                                Snackbar.LENGTH_LONG
-                            ).show()
-                        }
-                    )
+                    trainingName?.let {
+                        viewModel.updateTraining(
+                            currentUser!!.uid,
+                            training,
+                            onSuccess = {
+                                Snackbar.make(
+                                    requireView(),
+                                    getString(R.string.fragment_training_form_training_save_success),
+                                    Snackbar.LENGTH_LONG
+                                ).show()
+                                goToBack()
+                            },
+                            onError = {
+                                view?.let {
+                                    Snackbar.make(
+                                        it,
+                                        getString(R.string.fragment_training_form_save_error),
+                                        Snackbar.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
+                        )
+                    } ?: run {
+                        viewModel.saveTraining(
+                            training,
+                            onSuccess = {
+                                Snackbar.make(
+                                    requireView(),
+                                    getString(R.string.fragment_training_form_training_save_success),
+                                    Snackbar.LENGTH_LONG
+                                ).show()
+                                goToBack()
+                            },
+                            onError = {
+                                view?.let {
+                                    Snackbar.make(
+                                        it,
+                                        getString(R.string.fragment_training_form_save_error),
+                                        Snackbar.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
+                        )
+                    }
                 }
             } else {
                 Snackbar.make(
@@ -204,20 +295,37 @@ class TrainingFormFragment : Fragment() {
     private fun createTraining(): Training? {
         return FirebaseAuth.getInstance().currentUser?.let { user ->
             val editTextDescription = binding.edittextDescriptionTrainingForm.editText
-            editTextDescription?.let {
-                val name = Timestamp.now().seconds * 1000 + Timestamp.now().nanoseconds / 1000000
-                val description = it.text.toString()
-                val date = viewModel.getDate()
-                val author = user.uid
-                Training(
-                    name = name,
-                    description = description,
-                    date = date,
-                    author = author
-                )
+            trainingName?.let {
+                editTextDescription?.let {
+                    val description = it.text.toString()
+                    val date = viewModel.getDate()
+                    val author = user.uid
+                    Training(
+                        name = trainingName!!,
+                        description = description,
+                        date = date,
+                        author = author
+                    )
+                }
+            } ?: run {
+                editTextDescription?.let {
+                    val name =
+                        Timestamp.now().seconds * 1000 + Timestamp.now().nanoseconds / 1000000
+                    val description = it.text.toString()
+                    val date = viewModel.getDate()
+                    val author = user.uid
+                    Training(
+                        name = name,
+                        description = description,
+                        date = date,
+                        author = author
+                    )
+                }
             }
         }
+
     }
+
 
     private fun noEmptyFields(): Boolean {
         val editTextDescription = binding.edittextDescriptionTrainingForm
@@ -242,6 +350,7 @@ class TrainingFormFragment : Fragment() {
         viewModel.exercises.observe(this@TrainingFormFragment) {
             adapter.submitList(it)
         }
+        setsUpAdapterRemoveFunction()
     }
 
     override fun onDestroyView() {

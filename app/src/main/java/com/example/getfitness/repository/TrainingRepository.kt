@@ -35,4 +35,23 @@ class TrainingRepository(
         firebaseHelper.getTrainingByName(userId, name, onSuccess, onError)
     }
 
+    fun removeTraining(
+        userId: String,
+        trainingId: String,
+        onSuccess: () -> Unit = {},
+        onError: () -> Unit = {}
+    ) {
+        firebaseHelper.removeTraining(userId, trainingId, onSuccess, onError)
+    }
+
+    fun updateTraining(
+        userId: String,
+        training: Training,
+        exercises: List<Exercise>,
+        onSuccess: () -> Unit = {},
+        onError: () -> Unit = {}
+    ) {
+        firebaseHelper.updateTraining(userId, training, exercises, onSuccess, onError)
+    }
+
 }

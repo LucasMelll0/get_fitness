@@ -17,6 +17,8 @@ import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentDialogExerciseFormBinding
 import com.example.getfitness.extensions.tryToLoadImage
 import com.example.getfitness.model.Exercise
+import com.google.firebase.auth.FirebaseUser
+import org.koin.android.ext.android.inject
 import kotlin.random.Random
 
 class ExerciseFormDialogFragment(
@@ -29,6 +31,7 @@ class ExerciseFormDialogFragment(
 
     private var _binding: FragmentDialogExerciseFormBinding? = null
     private val binding get() = _binding!!
+    private val currentUser: FirebaseUser? by inject()
     private var imageUri: Uri? = null
     private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
@@ -50,7 +53,6 @@ class ExerciseFormDialogFragment(
         }
 
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -81,7 +83,8 @@ class ExerciseFormDialogFragment(
                     resources,
                     R.drawable.transparent_drawable,
                     requireActivity().theme
-                ))
+                )
+            )
         }
     }
 
@@ -97,21 +100,26 @@ class ExerciseFormDialogFragment(
         confirmationButton.setOnClickListener {
             if (noEmptyFields()) {
                 val exercise = createExercise()
-                onConfirmation(exercise)
+                exercise?.let {
+                    onConfirmation(exercise)
+                }
                 dialog?.dismiss()
             }
         }
     }
 
-    private fun createExercise(): Exercise {
-        val observations =
-            binding.edittextObservationsExerciseForm.editText!!.text.toString().trim()
-        val maxNameValue: Long = 100000
-        return Exercise(
-            name = Random.nextLong(0, maxNameValue),
-            observations = observations,
-            image = imageUri
-        )
+    private fun createExercise(): Exercise? {
+        return currentUser?.let {
+            val observations =
+                binding.edittextObservationsExerciseForm.editText!!.text.toString().trim()
+            val maxNameValue: Long = 100000
+            Exercise(
+                name = Random.nextLong(0, maxNameValue),
+                observations = observations,
+                image = imageUri,
+                author = it.uid
+            )
+        }
     }
 
     private fun noEmptyFields(): Boolean {

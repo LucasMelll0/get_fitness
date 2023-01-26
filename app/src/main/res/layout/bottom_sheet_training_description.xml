@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/bottom_sheet_background">
+
+    <View
+        android:id="@+id/_pull_dismiss"
+        android:layout_width="@dimen/default_bottom_sheet_pull_dismiss_width"
+        android:layout_height="@dimen/default_bottom_sheet_pull_dismiss_height"
+        android:background="@drawable/rounded_shape"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="@dimen/default_margin"/>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textview_description_bottom_sheet"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/_pull_dismiss"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Treino para musculos inferiores"
+        android:layout_marginVertical="@dimen/default_vertical_margin"
+        android:gravity="center"
+        android:textSize="@dimen/default_text_size"
+        android:textColor="@color/primary"/>
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/_divider"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textview_description_bottom_sheet"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="@dimen/default_horizontal_margin"
+        android:layout_marginVertical="@dimen/default_vertical_margin"
+        app:dividerColor="@color/primary_variant"/>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_edit_description_bottom_sheet"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/default_button_height"
+        app:layout_constraintTop_toBottomOf="@id/_divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/common_edit"
+        android:backgroundTint="@color/primary"
+        android:textColor="@color/on_primary"
+        android:textSize="@dimen/default_text_size"
+        android:layout_marginHorizontal="@dimen/default_horizontal_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginVertical="@dimen/default_vertical_margin"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

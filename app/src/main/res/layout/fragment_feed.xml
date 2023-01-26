@@ -25,17 +25,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="@id/toolbar_feed"
             app:layout_constraintBottom_toBottomOf="parent"/>
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/button_add_training"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:cornerRadius="@dimen/default_radius"
             android:layout_margin="@dimen/default_margin"
-            android:src="@drawable/ic_add"
-            app:fabSize="auto"
-            android:tint="@color/on_secondary"
-            app:backgroundTint="@color/secondary"
+            app:icon="@drawable/ic_add"
+            app:iconTint="@color/on_primary"
+            app:backgroundTint="@color/primary"
             android:contentDescription="@string/content_description_float_action_button" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

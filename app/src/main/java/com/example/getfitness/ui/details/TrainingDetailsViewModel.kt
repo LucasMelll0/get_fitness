@@ -1,11 +1,13 @@
 package com.example.getfitness.ui.details
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.getfitness.model.Exercise
 import com.example.getfitness.model.Training
 import com.example.getfitness.repository.TrainingRepository
+import com.example.getfitness.utils.formatTimestamp
 
 class TrainingDetailsViewModel(
     private val repository: TrainingRepository
@@ -21,7 +23,7 @@ class TrainingDetailsViewModel(
     fun getTrainingByName(
         userId: String,
         name: Number,
-        onSuccess: () -> Unit = {},
+        onSuccess: (date: String) -> Unit = {},
         onError: () -> Unit = {}
     ) {
         repository.getTrainingByName(
@@ -30,7 +32,9 @@ class TrainingDetailsViewModel(
             onSuccess = {training, exercises ->
                 _training.postValue(training)
                 _exercises.postValue(exercises)
-                onSuccess()
+                Log.i("DetailsViewModel", "getTrainingByName: $exercises")
+                val date = formatTimestamp(training.date)
+                onSuccess(date)
             },
             onError = onError
         )

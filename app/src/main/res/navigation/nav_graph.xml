@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph.xml"
-    app:startDestination="@id/trainingDetailsFragment">
+    app:startDestination="@id/feedFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -54,10 +54,21 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_feedFragment_to_trainingDetailsFragment"
+            app:destination="@id/trainingDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/trainingDetailsFragment"
         android:name="com.example.getfitness.ui.details.TrainingDetailsFragment"
         android:label="fragment_training_details"
-        tools:layout="@layout/fragment_training_details" />
+        tools:layout="@layout/fragment_training_details" >
+        <action
+            android:id="@+id/action_trainingDetailsFragment_to_trainingFormFragment"
+            app:destination="@id/trainingFormFragment" />
+        <argument
+            android:name="trainingId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+    </fragment>
 </navigation>
