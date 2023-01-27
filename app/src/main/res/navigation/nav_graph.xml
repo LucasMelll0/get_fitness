@@ -26,6 +26,9 @@
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
 
+        <action
+            android:id="@+id/action_registerFragment_to_welcomeScreenFragment"
+            app:destination="@id/welcomeScreenFragment" />
     </fragment>
     <fragment
         android:id="@+id/resetPasswordFragment"
@@ -73,5 +76,14 @@
             android:name="trainingId"
             app:argType="long"
             android:defaultValue="-1L" />
+    </fragment>
+    <fragment
+        android:id="@+id/welcomeScreenFragment"
+        android:name="com.example.getfitness.ui.authentication.welcome.WelcomeScreenFragment"
+        android:label="fragment_welcome_screen"
+        tools:layout="@layout/fragment_welcome_screen" >
+        <action
+            android:id="@+id/action_welcomeScreenFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
     </fragment>
 </navigation>

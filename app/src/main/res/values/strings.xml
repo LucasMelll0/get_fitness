@@ -45,4 +45,6 @@
     <string name="fragment_training_form_successfully_delete_training_message">Training deleted successfully!</string>
     <string name="fragment_training_form_delete_training_error">An error occurred while trying to delete the training</string>
     <string name="fragment_login_submit_error">An error has been occurred, please check your credentials!</string>
+    <string name="fragment_welcome_screen_button_text">Go to Home</string>
+    <string name="fragment_welcome_message">Welcome to GetFitness %s</string>
 </resources>

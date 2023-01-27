@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentRegisterBinding
+import com.example.getfitness.extensions.goTo
 import com.example.getfitness.extensions.goToBack
 import com.example.getfitness.extensions.showSnackBar
 import com.example.getfitness.model.User
@@ -60,6 +61,7 @@ class RegisterFragment : Fragment() {
                 onSuccess = {
                     progressBar(false)
                     showSnackBar(getString(R.string.fragment_register_success_register_message))
+                    goTo(R.id.action_registerFragment_to_welcomeScreenFragment)
                 },
                 onError = {
                     progressBar(false)

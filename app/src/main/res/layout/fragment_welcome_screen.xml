@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.authentication.welcome.WelcomeScreenFragment"
+    android:backgroundTint="@color/on_primary">
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/textview_welcome_message"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/default_image"
+        android:layout_margin="@dimen/default_margin"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textview_welcome_message"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="Welcome to GetFitness \n Lucas Mello!"
+        android:gravity="center"
+        android:textStyle="bold"
+        app:layout_constraintVertical_bias="0.7"
+        android:textSize="@dimen/big_text_size"
+        android:layout_margin="@dimen/default_margin"
+        android:textColor="@color/primary"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_go_to_home"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/default_button_height"
+        app:layout_constraintTop_toBottomOf="@id/textview_welcome_message"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/fragment_welcome_screen_button_text"
+        android:textSize="@dimen/default_text_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginHorizontal="@dimen/default_horizontal_margin"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
