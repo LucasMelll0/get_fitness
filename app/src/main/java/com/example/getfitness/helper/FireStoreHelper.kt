@@ -56,45 +56,52 @@ class FireStoreHelper(
         onError: () -> Unit = {}
     ) {
         val trainingRef = db.collection(TRAININGS_COLLECTION)
-            .document(name.toString()).get()
-        trainingRef.addOnSuccessListener { trainingDoc ->
-            val trainingName = trainingDoc.getLong(NAME_FIELD) ?: 0
-            val trainingDescription = trainingDoc.getString(DESCRIPTION_FIELD) ?: ""
-            val trainingDate = trainingDoc.getTimestamp(DATE_FIELD) ?: Timestamp.now()
-            val training = Training(trainingName, trainingDescription, trainingDate, userId)
-            trainingDoc.reference
-                .collection(EXERCISES_COLLECTION)
-                .whereEqualTo(AUTHOR_FIELD, userId)
-                .get().addOnSuccessListener { exerciseDocs ->
-                    val exerciseList = mutableListOf<Exercise>()
-                    Log.i(TAG, "getTrainingByName: ${exerciseDocs.size()}")
-                    for (exerciseDoc in exerciseDocs) {
-                        val exerciseName = exerciseDoc.getLong(NAME_FIELD) ?: 0
-                        val exerciseObservation = exerciseDoc.getString(OBSERVATIONS_FIELD) ?: ""
-                        val exerciseImage = exerciseDoc.getString(IMAGE_FIELD)?.let { uri ->
-                            Uri.parse(uri)
-                        }
-                        val exerciseAuthor = exerciseDoc.getString(AUTHOR_FIELD) ?: ""
-                        val exercise = Exercise(
-                            exerciseName,
-                            exerciseImage,
-                            exerciseObservation,
-                            exerciseAuthor
-                        )
-                        exerciseList.add(exercise)
-                    }
-
-                    onSuccess(training, exerciseList)
-                }.addOnFailureListener { exception ->
-                    Log.w(TAG, "getTrainingByName: ", exception)
-                    onError()
-                }
-
-        }
-            .addOnFailureListener {
+            .document(name.toString())
+        trainingRef.addSnapshotListener { trainingDoc, e ->
+            e?.let {
                 Log.w(TAG, "getTrainingByName: ", it)
                 onError()
+            } ?: run {
+                trainingDoc?.let {
+                    val trainingName = trainingDoc.getLong(NAME_FIELD) ?: 0
+                    val trainingDescription = trainingDoc.getString(DESCRIPTION_FIELD) ?: ""
+                    val trainingDate = trainingDoc.getTimestamp(DATE_FIELD) ?: Timestamp.now()
+                    val training = Training(trainingName, trainingDescription, trainingDate, userId)
+                    trainingDoc.reference
+                        .collection(EXERCISES_COLLECTION)
+                        .whereEqualTo(AUTHOR_FIELD, userId)
+                        .addSnapshotListener { exerciseDocs, e ->
+                            e?.let {
+                                Log.w(TAG, "getTrainingByName: ", e)
+                                onError()
+                            } ?: run {
+                                val exerciseList = mutableListOf<Exercise>()
+                                for (exerciseDoc in exerciseDocs!!) {
+                                    val exerciseName = exerciseDoc.getLong(NAME_FIELD) ?: 0
+                                    val exerciseObservation =
+                                        exerciseDoc.getString(OBSERVATIONS_FIELD) ?: ""
+                                    val exerciseImage =
+                                        exerciseDoc.getString(IMAGE_FIELD)?.let { uri ->
+                                            Uri.parse(uri)
+                                        }
+                                    val exerciseAuthor = exerciseDoc.getString(AUTHOR_FIELD) ?: ""
+                                    val exercise = Exercise(
+                                        exerciseName,
+                                        exerciseImage,
+                                        exerciseObservation,
+                                        exerciseAuthor
+                                    )
+                                    exerciseList.add(exercise)
+                                }
+
+                                onSuccess(training, exerciseList)
+                            }
+
+                        }
+                }
+
             }
+        }
     }
 
     fun saveTraining(
