@@ -80,7 +80,7 @@ class FeedFragment : Fragment() {
                 override fun onQueryTextChange(newText: String?): Boolean {
                     newText?.let {
                         if (newText.isNotEmpty()) {
-                            val filteredList = viewModel.search(it)
+                            val filteredList = viewModel.search(newText)
                             adapter.submitList(filteredList)
                         } else {
                             setsUpTrainingsObserver()
