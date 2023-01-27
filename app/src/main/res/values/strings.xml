@@ -44,4 +44,5 @@
     <string name="fragment_training_form_alert_dialog_message">Do you really want to delete this training?</string>
     <string name="fragment_training_form_successfully_delete_training_message">Training deleted successfully!</string>
     <string name="fragment_training_form_delete_training_error">An error occurred while trying to delete the training</string>
+    <string name="fragment_login_submit_error">An error has been occurred, please check your credentials!</string>
 </resources>

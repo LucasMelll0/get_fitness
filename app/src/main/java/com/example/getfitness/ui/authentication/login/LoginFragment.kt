@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment
 import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentLoginBinding
 import com.example.getfitness.extensions.goTo
+import com.example.getfitness.extensions.showSnackBar
 import com.example.getfitness.model.User
 import com.example.getfitness.utils.checkConnection
-import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : Fragment() {
@@ -53,9 +53,15 @@ class LoginFragment : Fragment() {
         val submitButton = binding.buttonSubmit
         submitButton.setOnClickListener {
             if (noEmptyFields()) {
+                progressBar(true)
                 tryConnectUser()
             }
         }
+    }
+
+    private fun progressBar(visibility: Boolean) {
+        val progressBar = binding.progressbarLogin
+        progressBar.visibility = if (visibility) View.VISIBLE else View.GONE
     }
 
     private fun tryConnectUser() {
@@ -68,19 +74,13 @@ class LoginFragment : Fragment() {
                 user,
                 onSuccess = { goTo(R.id.action_loginFragment_to_feedFragment) },
                 onError = {
-                    Snackbar.make(
-                        requireView(),
-                        getString(R.string.common_error_message),
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                    progressBar(false)
+                    showSnackBar(getString(R.string.fragment_login_submit_error))
                 }
             )
         }else {
-            Snackbar.make(
-                requireView(),
-                getString(R.string.common_offline_message),
-                Snackbar.LENGTH_SHORT
-            ).show()
+            progressBar(false)
+            showSnackBar(getString(R.string.common_offline_message))
         }
     }
 
@@ -93,11 +93,7 @@ class LoginFragment : Fragment() {
         ) {
             true
         } else {
-            Snackbar.make(
-                requireView(),
-                getString(R.string.common_empty_fields_message),
-                Snackbar.LENGTH_SHORT
-            ).show()
+            showSnackBar(getString(R.string.common_empty_fields_message))
             false
         }
     }

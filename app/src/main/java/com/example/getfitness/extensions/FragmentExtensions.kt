@@ -3,6 +3,7 @@ package com.example.getfitness.extensions
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 
 
 fun Fragment.goToBack() {
@@ -15,4 +16,14 @@ fun Fragment.goTo(destination: Int) {
 
 fun Fragment.goTo(action: NavDirections) {
     findNavController().navigate(action)
+}
+
+fun Fragment.showSnackBar(message: String) {
+    view?.let {
+        Snackbar.make(
+            it,
+            message,
+            Snackbar.LENGTH_SHORT
+        ).show()
+    }
 }

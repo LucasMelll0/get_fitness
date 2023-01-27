@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentResetPasswordBinding
 import com.example.getfitness.extensions.goToBack
+import com.example.getfitness.extensions.showSnackBar
 import com.example.getfitness.utils.checkConnection
-import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -44,9 +44,15 @@ class ResetPasswordFragment : Fragment() {
         val submitButton = binding.buttonSubmitResetPassword
         submitButton.setOnClickListener {
             if (noEmptyField()) {
+                progressBar(true)
                 sendPasswordResetEmail()
             }
         }
+    }
+
+    private fun progressBar(visible: Boolean) {
+        val progressBar = binding.progressbarResetPassword
+        progressBar.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     private fun sendPasswordResetEmail() {
@@ -56,26 +62,17 @@ class ResetPasswordFragment : Fragment() {
             viewModel.sendPasswordResetEmail(
                 email,
                 onSuccess = {
-                    Snackbar.make(
-                        requireView(),
-                        getString(R.string.fragment_reset_password_success_message),
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                    progressBar(false)
+                    showSnackBar(getString(R.string.fragment_reset_password_success_message))
                 },
                 onError = {
-                    Snackbar.make(
-                        requireView(),
-                        getString(R.string.common_error_message),
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                    progressBar(false)
+                    showSnackBar(getString(R.string.common_error_message))
                 }
             )
-        }else {
-            Snackbar.make(
-                requireView(),
-                getString(R.string.common_offline_message),
-                Snackbar.LENGTH_SHORT
-            ).show()
+        } else {
+            progressBar(false)
+            showSnackBar(getString(R.string.common_offline_message))
         }
     }
 
@@ -83,11 +80,7 @@ class ResetPasswordFragment : Fragment() {
         return if (binding.edittextEmailResetPassword.editText!!.text.isNotEmpty()) {
             true
         } else {
-            Snackbar.make(
-                requireView(),
-                getString(R.string.common_empty_field_message),
-                Snackbar.LENGTH_SHORT
-            ).show()
+            showSnackBar(getString(R.string.common_empty_field_message))
             false
         }
     }

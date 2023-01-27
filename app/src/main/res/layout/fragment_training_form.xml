@@ -13,21 +13,41 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/progressbar_form"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:cardElevation="@dimen/cardview_default_elevation"
+            app:cardBackgroundColor="@color/white"
+            app:strokeColor="@color/secondary"
+            app:cardCornerRadius="@dimen/default_radius">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:layout_height="wrap_content"
+                android:indeterminateTint="@color/primary_variant"
+                />
+        </com.google.android.material.card.MaterialCardView>
+
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_form_training"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/on_primary"
             app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/ic_arrow_back"/>
+            app:navigationIcon="@drawable/ic_arrow_back" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edittext_description_training_form"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
-            app:counterEnabled="true"
-            app:counterMaxLength="400"
-            app:errorEnabled="true"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/default_edittext_horizontal_margin"
             android:layout_marginTop="@dimen/default_vertical_margin"
@@ -40,6 +60,9 @@
             app:boxCornerRadiusTopStart="@dimen/default_radius"
             app:boxStrokeColor="@color/on_secondary"
             app:boxStrokeWidth="0dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="400"
+            app:errorEnabled="true"
             app:hintTextColor="@color/on_secondary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -62,7 +85,6 @@
             android:layout_marginTop="@dimen/default_vertical_margin"
             android:enabled="false"
             android:hint="@string/common_date"
-            app:errorEnabled="true"
             android:textColorHint="@color/on_secondary"
             app:boxBackgroundColor="@color/secondary"
             app:boxCornerRadiusBottomEnd="@dimen/default_radius"
@@ -71,11 +93,12 @@
             app:boxCornerRadiusTopStart="@dimen/default_radius"
             app:boxStrokeColor="@color/on_secondary"
             app:boxStrokeWidth="0dp"
+            app:errorEnabled="true"
             app:hintTextColor="@color/on_secondary"
-            app:layout_constraintWidth_percent="0.6"
             app:layout_constraintEnd_toStartOf="@id/button_set_date_training_form"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edittext_description_training_form">
+            app:layout_constraintTop_toBottomOf="@id/edittext_description_training_form"
+            app:layout_constraintWidth_percent="0.6">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -84,29 +107,30 @@
                 android:maxLines="7"
                 android:textColor="@color/on_secondary" />
         </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/button_set_date_training_form"
             android:layout_width="0dp"
-            app:icon="@drawable/ic_date"
-            app:iconTint="@color/on_primary"
-            app:cornerRadius="@dimen/default_radius"
+            android:layout_height="@dimen/default_button_height"
+            android:layout_marginEnd="@dimen/default_horizontal_margin"
             android:backgroundTint="@color/primary"
             android:contentDescription="@string/fragment_training_form_button_date_content_description"
-            android:layout_marginEnd="@dimen/default_horizontal_margin"
-            android:layout_height="@dimen/default_button_height"
-            app:layout_constraintTop_toTopOf="@id/edittext_date_training_form"
+            app:cornerRadius="@dimen/default_radius"
+            app:icon="@drawable/ic_date"
+            app:iconTint="@color/on_primary"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/edittext_date_training_form"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toTopOf="@id/edittext_date_training_form" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_add_exercise"
             android:layout_width="0dp"
             android:layout_height="@dimen/default_button_height"
+            android:layout_marginHorizontal="@dimen/default_horizontal_margin"
             android:layout_marginTop="@dimen/default_vertical_margin"
             android:text="@string/fragment_training_form_add_text"
             app:cornerRadius="@dimen/default_radius"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginHorizontal="@dimen/default_horizontal_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edittext_date_training_form"
@@ -119,20 +143,21 @@
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/button_add_exercise"
-            tools:listitem="@layout/item_exercise_training_form"
-            tools:itemCount="0"/>
+            tools:itemCount="0"
+            tools:listitem="@layout/item_exercise_training_form" />
+
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/button_confirm_training_form"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_margin="@dimen/default_margin"
             android:backgroundTint="@color/primary"
+            android:textColor="@color/on_primary"
+            android:textSize="@dimen/default_text_size"
             app:icon="@drawable/ic_confirm"
             app:iconTint="@color/on_primary"
-            android:textColor="@color/on_primary"
-            android:textSize="@dimen/default_text_size"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

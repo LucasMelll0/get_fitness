@@ -14,12 +14,12 @@ import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentTrainingDetailsBinding
 import com.example.getfitness.extensions.goTo
 import com.example.getfitness.extensions.goToBack
+import com.example.getfitness.extensions.showSnackBar
 import com.example.getfitness.model.Training
 import com.example.getfitness.ui.details.bottomsheet.BottomSheetTrainingDescription
 import com.example.getfitness.ui.details.viewpager.ExerciseAdapter
 import com.example.getfitness.utils.checkConnection
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -68,32 +68,31 @@ class TrainingDetailsFragment : Fragment() {
         } ?: goToBack()
     }
 
+    private fun progressBar(visible: Boolean) {
+        val progressBar = binding.progressbarDetails
+        progressBar.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
     private fun getTrainingByName(name: Number) {
         currentUser?.let {
             val connected = checkConnection(requireContext())
             if (connected) {
                 setsUpObservers()
+                progressBar(true)
                 viewModel.getTrainingByName(
                     it.uid,
                     name,
                     onSuccess = { date ->
                         setsUpToolbar(date)
+                        progressBar(false)
                     },
                     onError = {
-                        Snackbar.make(
-                            requireView(),
-                            getString(R.string.common_get_training_error),
-                            Snackbar.LENGTH_LONG
-                        ).show()
+                        showSnackBar(getString(R.string.common_get_training_error))
                         goToBack()
                     }
                 )
             } else {
-                Snackbar.make(
-                    requireView(),
-                    getString(R.string.common_offline_message),
-                    Snackbar.LENGTH_LONG
-                ).show()
+                showSnackBar(getString(R.string.common_offline_message))
                 goToBack()
             }
 

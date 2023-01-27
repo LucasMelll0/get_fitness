@@ -13,7 +13,7 @@ val trainingModule = module {
         FirebaseFirestore.getInstance()
     }
 
-    factory {
+    single {
         FirebaseStorage.getInstance().reference
     }
 

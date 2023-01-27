@@ -1,16 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.details.TrainingDetailsFragment"
-    android:fitsSystemWindows="true"
+    android:background="@color/on_primary"
     android:fillViewport="true"
-    android:background="@color/on_primary">
+    android:fitsSystemWindows="true"
+    tools:context=".ui.details.TrainingDetailsFragment">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/progressbar_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:cardElevation="@dimen/cardview_default_elevation"
+            app:cardBackgroundColor="@color/white"
+            app:strokeColor="@color/secondary"
+            app:cardCornerRadius="@dimen/default_radius">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:layout_height="wrap_content"
+                android:indeterminateTint="@color/primary_variant"
+                />
+        </com.google.android.material.card.MaterialCardView>
+
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_training_details"
             android:layout_width="match_parent"
@@ -19,27 +44,28 @@
             app:navigationIcon="@drawable/ic_arrow_back"
             app:navigationIconTint="@color/primary_variant"
             app:titleCentered="true"
-            app:titleTextColor="@color/primary_variant"
-            />
+            app:titleTextColor="@color/primary_variant" />
+
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewpager_training_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/default_vertical_margin"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginVertical="@dimen/default_vertical_margin"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_show_description_training_details"
             android:layout_width="match_parent"
             android:layout_height="@dimen/default_button_height"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/viewpager_training_details"
-            app:layout_constraintVertical_bias="1"
             android:layout_margin="@dimen/default_margin"
             android:text="@string/fragment_training_details_button_text"
-            android:textSize="@dimen/default_text_size"/>
+            android:textSize="@dimen/default_text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewpager_training_details"
+            app:layout_constraintVertical_bias="1" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.core.widget.NestedScrollView>

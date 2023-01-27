@@ -4,20 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/on_primary"
     android:fillViewport="true"
     android:fitsSystemWindows="true"
-    tools:context=".ui.authentication.register.RegisterFragment"
-    android:background="@color/on_primary">
+    tools:context=".ui.authentication.register.RegisterFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/progressbar_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:cardElevation="@dimen/cardview_default_elevation"
+            app:cardBackgroundColor="@color/white"
+            app:strokeColor="@color/secondary"
+            app:cardCornerRadius="@dimen/default_radius">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:layout_height="wrap_content"
+                android:indeterminateTint="@color/primary_variant"
+                />
+        </com.google.android.material.card.MaterialCardView>
+
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/ic_arrow_back"/>
+            app:navigationIcon="@drawable/ic_arrow_back" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edittext_email_register"
@@ -56,8 +80,6 @@
             android:layout_marginTop="@dimen/default_vertical_margin"
             android:hint="@string/common_user_name"
             android:textColorHint="@color/on_secondary"
-            app:counterEnabled="true"
-            app:counterMaxLength="30"
             app:boxBackgroundColor="@color/secondary"
             app:boxCornerRadiusBottomEnd="@dimen/default_radius"
             app:boxCornerRadiusBottomStart="@dimen/default_radius"
@@ -65,6 +87,8 @@
             app:boxCornerRadiusTopStart="@dimen/default_radius"
             app:boxStrokeColor="@color/on_secondary"
             app:boxStrokeWidth="0dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="30"
             app:hintTextColor="@color/on_secondary"
             app:layout_constraintEnd_toEndOf="@id/edittext_email_register"
             app:layout_constraintStart_toStartOf="@id/edittext_email_register"
@@ -134,17 +158,17 @@
                 android:inputType="textPassword"
                 android:textColor="@color/on_secondary" />
         </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_submit_register"
             android:layout_width="0dp"
             android:layout_height="@dimen/default_button_height"
-            app:layout_constraintTop_toBottomOf="@id/edittext_confirm_password_register"
-            app:layout_constraintStart_toStartOf="@id/edittext_confirm_password_register"
-            app:layout_constraintEnd_toEndOf="@id/edittext_confirm_password_register"
             android:layout_marginTop="@dimen/default_vertical_margin"
             android:text="@string/common_register"
             app:cornerRadius="@dimen/default_radius"
-            />
+            app:layout_constraintEnd_toEndOf="@id/edittext_confirm_password_register"
+            app:layout_constraintStart_toStartOf="@id/edittext_confirm_password_register"
+            app:layout_constraintTop_toBottomOf="@id/edittext_confirm_password_register" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

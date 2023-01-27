@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentRegisterBinding
 import com.example.getfitness.extensions.goToBack
+import com.example.getfitness.extensions.showSnackBar
 import com.example.getfitness.model.User
 import com.example.getfitness.utils.checkConnection
-import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -38,9 +37,15 @@ class RegisterFragment : Fragment() {
         val registerButton = binding.buttonSubmitRegister
         registerButton.setOnClickListener {
             if (noEmptyFields() && samePasswords()) {
+                progressBar(true)
                 tryRegisterUser()
             }
         }
+    }
+
+    private fun progressBar(visible: Boolean) {
+        val progressBar = binding.progressbarRegister
+        progressBar.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     private fun tryRegisterUser() {
@@ -53,55 +58,33 @@ class RegisterFragment : Fragment() {
             viewModel.register(
                 user,
                 onSuccess = {
-                    Snackbar.make(
-                        requireView(),
-                        getString(R.string.fragment_register_success_register_message),
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                    goToBack()
+                    progressBar(false)
+                    showSnackBar(getString(R.string.fragment_register_success_register_message))
                 },
                 onError = {
+                    progressBar(false)
                     errorHandler(it)
                 }
             )
-        }else {
-            Snackbar.make(
-                requireView(),
-                getString(R.string.common_offline_message),
-                Snackbar.LENGTH_LONG
-            ).show()
+        } else {
+            progressBar(false)
+            showSnackBar(getString(R.string.common_offline_message))
         }
     }
 
     private fun errorHandler(error: String) {
         when {
             (error.contains("least 6 characters")) -> {
-                Snackbar.make(
-                    requireView(),
-                    getString(R.string.error_lenght_password),
-                    Snackbar.LENGTH_SHORT
-                ).show()
+                showSnackBar(getString(R.string.error_lenght_password))
             }
             (error.contains("address is badly")) -> {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.error_invalid_email),
-                    Toast.LENGTH_SHORT
-                ).show()
+                showSnackBar(getString(R.string.error_invalid_email))
             }
             (error.contains("address is already")) -> {
-                Snackbar.make(
-                    requireView(),
-                    getString(R.string.error_already_used_email),
-                    Snackbar.LENGTH_SHORT
-                ).show()
+                showSnackBar(getString(R.string.error_already_used_email))
             }
             else -> {
-                Snackbar.make(
-                    requireView(),
-                    getString(R.string.error_message_for_register_user),
-                    Snackbar.LENGTH_SHORT
-                ).show()
+                showSnackBar(getString(R.string.error_message_for_register_user))
             }
         }
     }
@@ -116,11 +99,7 @@ class RegisterFragment : Fragment() {
         return if (password == confirmPassword) {
             true
         } else {
-            Snackbar.make(
-                requireView(),
-                getString(R.string.fragment_register_password_not_same),
-                Snackbar.LENGTH_SHORT
-            ).show()
+            showSnackBar(getString(R.string.fragment_register_password_not_same))
             false
         }
     }
@@ -133,11 +112,7 @@ class RegisterFragment : Fragment() {
         ) {
             true
         } else {
-            Snackbar.make(
-                requireView(),
-                getString(R.string.common_empty_fields_message),
-                Snackbar.LENGTH_SHORT
-            ).show()
+            showSnackBar(getString(R.string.common_empty_fields_message))
             false
         }
     }

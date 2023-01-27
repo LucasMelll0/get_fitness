@@ -1,48 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.feed.FeedFragment"
+    android:background="@color/on_primary"
     android:fillViewport="true"
     android:fitsSystemWindows="true"
-    android:background="@color/on_primary">
+    tools:context=".ui.feed.FeedFragment">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/progressbar_feed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:cardElevation="@dimen/cardview_default_elevation"
+            app:cardBackgroundColor="@color/white"
+            app:strokeColor="@color/secondary"
+            app:cardCornerRadius="@dimen/default_radius">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:layout_height="wrap_content"
+                android:indeterminateTint="@color/primary_variant"
+                />
+        </com.google.android.material.card.MaterialCardView>
+
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_feed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:title="Trainings"
-            app:titleCentered="true"
-            app:titleTextColor="@color/primary_variant"
             app:navigationIcon="@drawable/ic_exit"
             app:navigationIconTint="@color/primary_variant"
-            />
+            app:title="Trainings"
+            app:titleCentered="true"
+            app:titleTextColor="@color/primary_variant" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview_feed"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            tools:listitem="@layout/item_training"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_feed"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/toolbar_feed"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_feed"
+            tools:listitem="@layout/item_training" />
+
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/button_add_training"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:cornerRadius="@dimen/default_radius"
             android:layout_margin="@dimen/default_margin"
+            android:contentDescription="@string/content_description_float_action_button"
+            app:backgroundTint="@color/primary"
+            app:cornerRadius="@dimen/default_radius"
             app:icon="@drawable/ic_add"
             app:iconTint="@color/on_primary"
-            app:backgroundTint="@color/primary"
-            android:contentDescription="@string/content_description_float_action_button" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.core.widget.NestedScrollView>

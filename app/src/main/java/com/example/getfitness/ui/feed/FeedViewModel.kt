@@ -17,11 +17,12 @@ class FeedViewModel(
     private var _trainings = MutableLiveData<List<Training>>(emptyList())
     internal val trainings: LiveData<List<Training>> = _trainings
 
-    fun getAllTrainings(userId: String, onError: () -> Unit = {}) {
+    fun getAllTrainings(userId: String, onSuccess: () -> Unit = {}, onError: () -> Unit = {}) {
         trainingRepository.getAllTrainings(
             userId,
             onSuccess = {
                 viewModelScope.launch { _trainings.postValue(it) }
+                onSuccess()
             },
             onError
         )

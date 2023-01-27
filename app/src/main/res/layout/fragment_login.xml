@@ -13,6 +13,28 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/progressbar_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:cardElevation="@dimen/cardview_default_elevation"
+            app:cardBackgroundColor="@color/white"
+            app:strokeColor="@color/secondary"
+            app:cardCornerRadius="@dimen/default_radius">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:layout_height="wrap_content"
+                android:indeterminateTint="@color/primary_variant"
+                 />
+        </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edittext_email_login"
@@ -40,8 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
-                android:textColor="@color/on_secondary"
-                 />
+                android:textColor="@color/on_secondary" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout

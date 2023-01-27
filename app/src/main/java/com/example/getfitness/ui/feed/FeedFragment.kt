@@ -11,10 +11,10 @@ import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentFeedBinding
 import com.example.getfitness.extensions.goTo
 import com.example.getfitness.extensions.goToBack
+import com.example.getfitness.extensions.showSnackBar
 import com.example.getfitness.ui.feed.recyclerview.TrainingAdapter
 import com.example.getfitness.utils.checkConnection
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -43,6 +43,10 @@ class FeedFragment : Fragment() {
         setsUpButtonAdd()
     }
 
+    private fun checkCurrentUser() {
+        currentUser ?: goTo(R.id.action_feedFragment_to_loginFragment)
+    }
+
     private fun setsUpToolbar() {
         val toolbar = binding.toolbarFeed
         setsUpNavigationOnclick(toolbar)
@@ -57,16 +61,33 @@ class FeedFragment : Fragment() {
         }
     }
 
-    private fun checkCurrentUser() {
-        currentUser ?: goTo(R.id.action_feedFragment_to_loginFragment)
-    }
-
     private fun setsUpPopBackStack() {
         activity?.let {
             it.onBackPressedDispatcher.addCallback(this) {
                 it.finish()
             }
         }
+    }
+
+    private fun setsUpRecyclerView() {
+        val recyclerView = binding.recyclerviewFeed
+        val columnsQuantity = 2
+        recyclerView.also {
+            it.adapter = this.adapter
+            it.layoutManager = StaggeredGridLayoutManager(
+                columnsQuantity,
+                StaggeredGridLayoutManager.VERTICAL
+            )
+        }
+        setsUpAdapterOnClick()
+    }
+
+    private fun progressBar(visible: Boolean) {
+        _binding?.let {
+            val progressBar = binding.progressbarFeed
+            progressBar.visibility = if (visible) View.VISIBLE else View.GONE
+        }
+
     }
 
     override fun onStart() {
@@ -87,18 +108,6 @@ class FeedFragment : Fragment() {
         }
     }
 
-    private fun setsUpRecyclerView() {
-        val recyclerView = binding.recyclerviewFeed
-        recyclerView.also {
-            it.adapter = this.adapter
-            it.layoutManager = StaggeredGridLayoutManager(
-                2,
-                StaggeredGridLayoutManager.VERTICAL
-            )
-        }
-        setsUpAdapterOnClick()
-    }
-
     private fun setsUpAdapterOnClick() {
         adapter.onClick = {
             val action =
@@ -111,24 +120,19 @@ class FeedFragment : Fragment() {
         currentUser?.let {
             val connected = checkConnection(requireContext())
             if (connected) {
+                progressBar(true)
                 viewModel.getAllTrainings(
                     it.uid,
+                    onSuccess = {
+                        progressBar(false)
+                    },
                     onError = {
-                        view?.let { view ->
-                            Snackbar.make(
-                                view,
-                                getString(R.string.fragment_feed_get_trainings_error),
-                                Snackbar.LENGTH_LONG
-                            ).show()
-                        }
+                        progressBar(false)
+                        showSnackBar(getString(R.string.fragment_feed_get_trainings_error))
                     }
                 )
             } else {
-                Snackbar.make(
-                    requireView(),
-                    getString(R.string.common_offline_message),
-                    Snackbar.LENGTH_LONG
-                ).show()
+                showSnackBar(getString(R.string.common_offline_message))
             }
 
         } ?: goToBack()
