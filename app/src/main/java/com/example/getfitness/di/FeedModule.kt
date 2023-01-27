@@ -12,6 +12,6 @@ val feedModule = module {
     }
 
     viewModel {
-        FeedViewModel(get())
+        FeedViewModel(get(), get())
     }
 }

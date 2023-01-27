@@ -57,6 +57,9 @@
         <action
             android:id="@+id/action_feedFragment_to_trainingDetailsFragment"
             app:destination="@id/trainingDetailsFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/trainingDetailsFragment"

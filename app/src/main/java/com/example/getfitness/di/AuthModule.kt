@@ -1,5 +1,6 @@
 package com.example.getfitness.di
 
+import com.example.getfitness.helper.AuthHelper
 import com.example.getfitness.repository.AccountRepository
 import com.example.getfitness.ui.authentication.login.LoginViewModel
 import com.example.getfitness.ui.authentication.register.RegisterViewModel
@@ -15,7 +16,7 @@ val authModule = module {
     }
 
     single {
-        FirebaseAuth.getInstance().currentUser
+        AuthHelper(get())
     }
 
     single {

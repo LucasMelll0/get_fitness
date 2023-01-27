@@ -13,8 +13,9 @@ import com.example.getfitness.extensions.goTo
 import com.example.getfitness.extensions.goToBack
 import com.example.getfitness.ui.feed.recyclerview.TrainingAdapter
 import com.example.getfitness.utils.checkConnection
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.FirebaseAuth
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -24,7 +25,7 @@ class FeedFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: FeedViewModel by viewModel()
     private val adapter: TrainingAdapter by inject()
-    private val currentUser: FirebaseUser? by inject()
+    private val currentUser = FirebaseAuth.getInstance().currentUser
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,8 +37,28 @@ class FeedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        checkCurrentUser()
+        setsUpToolbar()
         setsUpRecyclerView()
         setsUpButtonAdd()
+    }
+
+    private fun setsUpToolbar() {
+        val toolbar = binding.toolbarFeed
+        setsUpNavigationOnclick(toolbar)
+    }
+
+    private fun setsUpNavigationOnclick(toolbar: MaterialToolbar) {
+        toolbar.setNavigationOnClickListener {
+            currentUser?.let {
+                viewModel.disconnect()
+                goTo(R.id.action_feedFragment_to_loginFragment)
+            }
+        }
+    }
+
+    private fun checkCurrentUser() {
+        currentUser ?: goTo(R.id.action_feedFragment_to_loginFragment)
     }
 
     private fun setsUpPopBackStack() {
@@ -93,11 +114,13 @@ class FeedFragment : Fragment() {
                 viewModel.getAllTrainings(
                     it.uid,
                     onError = {
-                        Snackbar.make(
-                            requireView(),
-                            getString(R.string.fragment_feed_get_trainings_error),
-                            Snackbar.LENGTH_LONG
-                        ).show()
+                        view?.let { view ->
+                            Snackbar.make(
+                                view,
+                                getString(R.string.fragment_feed_get_trainings_error),
+                                Snackbar.LENGTH_LONG
+                            ).show()
+                        }
                     }
                 )
             } else {

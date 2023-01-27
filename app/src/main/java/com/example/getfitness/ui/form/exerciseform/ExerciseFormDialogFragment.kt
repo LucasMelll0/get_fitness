@@ -17,8 +17,7 @@ import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentDialogExerciseFormBinding
 import com.example.getfitness.extensions.tryToLoadImage
 import com.example.getfitness.model.Exercise
-import com.google.firebase.auth.FirebaseUser
-import org.koin.android.ext.android.inject
+import com.google.firebase.auth.FirebaseAuth
 import kotlin.random.Random
 
 class ExerciseFormDialogFragment(
@@ -31,7 +30,7 @@ class ExerciseFormDialogFragment(
 
     private var _binding: FragmentDialogExerciseFormBinding? = null
     private val binding get() = _binding!!
-    private val currentUser: FirebaseUser? by inject()
+    private val currentUser = FirebaseAuth.getInstance().currentUser
     private var imageUri: Uri? = null
     private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {

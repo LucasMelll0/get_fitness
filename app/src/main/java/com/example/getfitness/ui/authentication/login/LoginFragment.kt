@@ -1,10 +1,10 @@
 package com.example.getfitness.ui.authentication.login
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentLoginBinding
@@ -35,9 +35,18 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setsUpPopBackStack()
         setsUpRegisterText()
         setsUpForgotPasswordText()
         setsUpSubmitButton()
+    }
+
+    private fun setsUpPopBackStack() {
+        activity?.let {
+            it.onBackPressedDispatcher.addCallback(this) {
+                it.finish()
+            }
+        }
     }
 
     private fun setsUpSubmitButton() {
@@ -57,7 +66,7 @@ class LoginFragment : Fragment() {
         if (connected){
             viewModel.connect(
                 user,
-                onSuccess = { Log.i("Teste", "connectUser: SUCESSO") },
+                onSuccess = { goTo(R.id.action_loginFragment_to_feedFragment) },
                 onError = {
                     Snackbar.make(
                         requireView(),

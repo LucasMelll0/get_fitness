@@ -66,4 +66,8 @@ class AuthHelper(
             }
     }
 
+    fun disconnect() {
+        firebaseAuth.signOut()
+    }
+
 }

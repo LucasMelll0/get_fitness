@@ -32,4 +32,8 @@ class AccountRepository(
     ) {
         authHelper.sendPasswordResetEmail(email, onSuccess, onError)
     }
+
+    fun disconnect() {
+        authHelper.disconnect()
+    }
 }

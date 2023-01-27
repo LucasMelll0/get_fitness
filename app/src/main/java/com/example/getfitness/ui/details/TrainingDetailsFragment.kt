@@ -20,7 +20,7 @@ import com.example.getfitness.ui.details.viewpager.ExerciseAdapter
 import com.example.getfitness.utils.checkConnection
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.FirebaseAuth
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.abs
@@ -32,7 +32,7 @@ class TrainingDetailsFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: TrainingDetailsViewModel by viewModel()
     private val adapter: ExerciseAdapter by inject()
-    private val currentUser: FirebaseUser? by inject()
+    private val currentUser = FirebaseAuth.getInstance().currentUser
     private val args: TrainingDetailsFragmentArgs by navArgs()
     private var trainingId: Long? = null
 

@@ -24,7 +24,6 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -36,7 +35,7 @@ class TrainingFormFragment : Fragment() {
     private val adapter: ExerciseFormAdapter by inject()
     private val viewModel: TrainingFormViewModel by viewModel()
     private val args: TrainingFormFragmentArgs by navArgs()
-    private val currentUser: FirebaseUser? by inject()
+    private val currentUser = FirebaseAuth.getInstance().currentUser
     private var trainingName: Number? = null
 
     override fun onCreateView(
