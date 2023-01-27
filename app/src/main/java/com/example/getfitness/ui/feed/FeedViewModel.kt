@@ -32,4 +32,12 @@ class FeedViewModel(
         accountRepository.disconnect()
     }
 
+    fun search(query: String): List<Training> {
+        return _trainings.value?.let { trainings ->
+            trainings.filter { training ->
+                training.description.contains(query, true)
+            }
+        } ?: emptyList()
+    }
+
 }

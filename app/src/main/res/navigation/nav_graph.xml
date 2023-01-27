@@ -44,6 +44,9 @@
             android:name="training_name"
             app:argType="long"
             android:defaultValue="-1L" />
+        <action
+            android:id="@+id/action_trainingFormFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
     </fragment>
     <fragment
         android:id="@+id/feedFragment"
@@ -71,7 +74,8 @@
         tools:layout="@layout/fragment_training_details" >
         <action
             android:id="@+id/action_trainingDetailsFragment_to_trainingFormFragment"
-            app:destination="@id/trainingFormFragment" />
+            app:destination="@id/trainingFormFragment"
+            app:popUpToInclusive="true"/>
         <argument
             android:name="trainingId"
             app:argType="long"

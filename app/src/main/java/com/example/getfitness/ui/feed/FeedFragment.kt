@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentFeedBinding
 import com.example.getfitness.extensions.goTo
 import com.example.getfitness.extensions.goToBack
+import com.example.getfitness.extensions.showAlertDialog
 import com.example.getfitness.extensions.showSnackBar
 import com.example.getfitness.ui.feed.recyclerview.TrainingAdapter
 import com.example.getfitness.utils.checkConnection
@@ -38,7 +40,6 @@ class FeedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         checkCurrentUser()
-        setsUpToolbar()
         setsUpRecyclerView()
         setsUpButtonAdd()
     }
@@ -49,15 +50,60 @@ class FeedFragment : Fragment() {
 
     private fun setsUpToolbar() {
         val toolbar = binding.toolbarFeed
+        toolbar.inflateMenu(R.menu.menu_feed)
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.menu_item_search_feed -> {
+                    val search = toolbar.menu.findItem(R.id.menu_item_search_feed)
+                    val searchView = search?.actionView as? SearchView
+                    setsUpSearchView(searchView)
+                    true
+                }
+                else -> false
+            }
+        }
         setsUpNavigationOnclick(toolbar)
+    }
+
+    private fun setsUpSearchView(searchView: SearchView?) {
+        searchView?.let {
+            it.isSubmitButtonEnabled = false
+            it.setOnCloseListener {
+                setsUpTrainingsObserver()
+                false
+            }
+            it.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    newText?.let {
+                        if (newText.isNotEmpty()) {
+                            val filteredList = viewModel.search(it)
+                            adapter.submitList(filteredList)
+                        } else {
+                            setsUpTrainingsObserver()
+                        }
+                    } ?: setsUpTrainingsObserver()
+                    return false
+                }
+
+            })
+        }
     }
 
     private fun setsUpNavigationOnclick(toolbar: MaterialToolbar) {
         toolbar.setNavigationOnClickListener {
-            currentUser?.let {
-                viewModel.disconnect()
-                goTo(R.id.action_feedFragment_to_loginFragment)
-            }
+            val message = "Do you really want to disconnect?"
+            showAlertDialog(message, onConfirm = { disconnect() })
+        }
+    }
+
+    private fun disconnect() {
+        currentUser?.let {
+            viewModel.disconnect()
+            goTo(R.id.action_feedFragment_to_loginFragment)
         }
     }
 
@@ -92,6 +138,7 @@ class FeedFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        setsUpToolbar()
         setsUpTrainingsObserver()
         tryGetAllTrainings()
     }
@@ -139,9 +186,19 @@ class FeedFragment : Fragment() {
 
     }
 
+    private fun emptyListMessage(visible: Boolean) {
+        val viewEmptyList = binding.viewEmptyListMessage
+        viewEmptyList.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
     private fun setsUpTrainingsObserver() {
         viewModel.trainings.observe(this@FeedFragment) {
             adapter.submitList(it)
+            if (it.isEmpty()) {
+                emptyListMessage(true)
+            } else {
+                emptyListMessage(false)
+            }
         }
     }
 

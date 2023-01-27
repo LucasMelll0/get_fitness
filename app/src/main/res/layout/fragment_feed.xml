@@ -12,27 +12,27 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/progressbar_feed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            tools:visibility="visible"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/default_radius"
+            app:cardElevation="@dimen/cardview_default_elevation"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:cardElevation="@dimen/cardview_default_elevation"
-            app:cardBackgroundColor="@color/white"
             app:strokeColor="@color/secondary"
-            app:cardCornerRadius="@dimen/default_radius">
+            tools:visibility="visible">
 
             <ProgressBar
                 android:layout_width="wrap_content"
-                android:layout_margin="@dimen/default_margin"
                 android:layout_height="wrap_content"
-                android:indeterminateTint="@color/primary_variant"
-                />
+                android:layout_margin="@dimen/default_margin"
+                android:indeterminateTint="@color/primary_variant" />
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -45,6 +45,42 @@
             app:title="Trainings"
             app:titleCentered="true"
             app:titleTextColor="@color/primary_variant" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/view_empty_list_message"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="@id/recyclerview_feed"
+            app:layout_constraintStart_toStartOf="@id/recyclerview_feed"
+            app:layout_constraintEnd_toEndOf="@id/recyclerview_feed"
+            app:layout_constraintBottom_toBottomOf="@id/recyclerview_feed"
+            android:background="@color/on_primary"
+            >
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/_textview_empty_list"
+                    android:src="@drawable/empty_list_image"
+                    />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/_textview_empty_list"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:lineSpacingExtra="10sp"
+                android:textStyle="bold"
+                android:text="@string/fragment_feed_empty_list_message"
+                android:textSize="@dimen/medium_text_size"
+                android:textColor="@color/primary"
+                android:gravity="center"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview_feed"

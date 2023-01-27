@@ -47,4 +47,6 @@
     <string name="fragment_login_submit_error">An error has been occurred, please check your credentials!</string>
     <string name="fragment_welcome_screen_button_text">Go to Home</string>
     <string name="fragment_welcome_message">Welcome to GetFitness %s</string>
+    <string name="fragment_feed_empty_list_message">You still don\'t have trainings!! \n Add new trainings in the button below</string>
+    <string name="common_search">Search</string>
 </resources>
