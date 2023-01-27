@@ -11,24 +11,36 @@ class StorageHelper(
 ) {
 
     fun saveImage(image: Uri, onSuccess: (uri: Uri) -> Unit = {}, onError: () -> Unit = {}) {
-        val imageRef = storageReference.child("images/${image.lastPathSegment}")
-        val uploadTask = imageRef.putFile(image)
-        uploadTask.continueWithTask { task ->
-            if (!task.isSuccessful){
-                task.exception?.let {
-                    throw it
+        try {
+            val imageRef = storageReference.child("images/${image.lastPathSegment}")
+            val uploadTask = imageRef.putFile(image)
+            uploadTask
+                .onSuccessTask {
+                    uploadTask.continueWithTask { task ->
+                        if (!task.isSuccessful) {
+                            task.exception?.let {
+                                Log.w(TAG, "saveImage: ", it)
+                            }
+                        }
+                        imageRef.downloadUrl
+                    }
+                        .addOnSuccessListener {
+                            onSuccess(it)
+                        }
+                        .addOnFailureListener {
+                            onError()
+                            Log.w(TAG, "saveImage: ", it)
+                        }
+                }.addOnFailureListener {
+                    Log.w(TAG, "saveImage: ", it)
+                    onError()
                 }
-            }
-            imageRef.downloadUrl
-        }.addOnCompleteListener { task ->
-        if (task.isSuccessful) {
-            val downloadUri = task.result
-            onSuccess(downloadUri)
-        }else {
-            onError()
+
+
+        } catch (e: Exception){
+            Log.w(TAG, "saveImage: ", e)
         }
 
-        }
     }
 
     fun deleteImage(image: String) {
