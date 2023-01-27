@@ -26,7 +26,7 @@ class TrainingDetailsViewModel(
         onSuccess: (date: String) -> Unit = {},
         onError: () -> Unit = {}
     ) {
-        repository.getTrainingByName(
+        repository.getTrainingByNameRealTime(
             userId,
             name,
             onSuccess = {training, exercises ->

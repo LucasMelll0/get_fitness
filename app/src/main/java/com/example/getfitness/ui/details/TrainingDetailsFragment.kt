@@ -69,8 +69,10 @@ class TrainingDetailsFragment : Fragment() {
     }
 
     private fun progressBar(visible: Boolean) {
-        val progressBar = binding.progressbarDetails
-        progressBar.visibility = if (visible) View.VISIBLE else View.GONE
+        _binding?.let {
+            val progressBar = binding.progressbarDetails
+            progressBar.visibility = if (visible) View.VISIBLE else View.GONE
+        }
     }
 
     private fun getTrainingByName(name: Number) {
@@ -101,9 +103,11 @@ class TrainingDetailsFragment : Fragment() {
     }
 
     private fun setsUpToolbar(date: String) {
-        val toolbar = binding.toolbarTrainingDetails
-        toolbar.title = date
-        setsUpNavigationButton(toolbar)
+        _binding?.let {
+            val toolbar = binding.toolbarTrainingDetails
+            toolbar.title = date
+            setsUpNavigationButton(toolbar)
+        }
 
     }
 
@@ -125,9 +129,11 @@ class TrainingDetailsFragment : Fragment() {
     }
 
     private fun setsUpButtonShowDescription(training: Training) {
-        val buttonShowDescription = binding.buttonShowDescriptionTrainingDetails
-        buttonShowDescription.setOnClickListener {
-            setsUpBottomSheetDescription(training)
+        _binding?.let {
+            val buttonShowDescription = binding.buttonShowDescriptionTrainingDetails
+            buttonShowDescription.setOnClickListener {
+                setsUpBottomSheetDescription(training)
+            }
         }
     }
 
@@ -145,25 +151,27 @@ class TrainingDetailsFragment : Fragment() {
 
 
     private fun setsUpViewPager() {
-        val viewPager = binding.viewpagerTrainingDetails
-        val compositePageTransformer = CompositePageTransformer()
-        compositePageTransformer.addTransformer(
-            MarginPageTransformer(
-                (40 * Resources.getSystem()
-                    .displayMetrics.density).toInt()
+        _binding?.let {
+            val viewPager = binding.viewpagerTrainingDetails
+            val compositePageTransformer = CompositePageTransformer()
+            compositePageTransformer.addTransformer(
+                MarginPageTransformer(
+                    (40 * Resources.getSystem()
+                        .displayMetrics.density).toInt()
+                )
             )
-        )
-        compositePageTransformer.addTransformer { page, position ->
-            val r = 1 - abs(position)
-            page.scaleY = (0.80f + r * 0.20f)
-        }
-        viewPager.also {
-            it.clipChildren = false
-            it.clipToPadding = false
-            it.offscreenPageLimit = 3
-            (it.getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
-            it.setPageTransformer(compositePageTransformer)
-            it.adapter = this.adapter
+            compositePageTransformer.addTransformer { page, position ->
+                val r = 1 - abs(position)
+                page.scaleY = (0.80f + r * 0.20f)
+            }
+            viewPager.also {
+                it.clipChildren = false
+                it.clipToPadding = false
+                it.offscreenPageLimit = 3
+                (it.getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+                it.setPageTransformer(compositePageTransformer)
+                it.adapter = this.adapter
+            }
         }
     }
 

@@ -35,6 +35,15 @@ class TrainingRepository(
         firebaseHelper.getTrainingByName(userId, name, onSuccess, onError)
     }
 
+    fun getTrainingByNameRealTime(
+        userId: String,
+        name: Number,
+        onSuccess: (training: Training, exercises: List<Exercise>) -> Unit,
+        onError: () -> Unit = {}
+    ) {
+        firebaseHelper.getTrainingByNameRealTime(userId, name, onSuccess, onError)
+    }
+
     fun removeTraining(
         userId: String,
         trainingId: String,

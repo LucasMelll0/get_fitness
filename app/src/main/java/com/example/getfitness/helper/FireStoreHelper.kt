@@ -56,6 +56,63 @@ class FireStoreHelper(
         onError: () -> Unit = {}
     ) {
         val trainingRef = db.collection(TRAININGS_COLLECTION)
+            .document(name.toString()).get()
+        trainingRef.addOnCompleteListener { trainingTask ->
+            if (trainingTask.isSuccessful) {
+                trainingTask.result?.let {
+                    val trainingName = it.getLong(NAME_FIELD) ?: 0
+                    val trainingDescription = it.getString(DESCRIPTION_FIELD) ?: ""
+                    val trainingDate = it.getTimestamp(DATE_FIELD) ?: Timestamp.now()
+                    val training = Training(trainingName, trainingDescription, trainingDate, userId)
+                    it.reference
+                        .collection(EXERCISES_COLLECTION)
+                        .whereEqualTo(AUTHOR_FIELD, userId)
+                        .get()
+                        .addOnCompleteListener { exercisesTask ->
+                            if (exercisesTask.isSuccessful) {
+                                exercisesTask.result?.let { exerciceDocs ->
+                                    val exerciseList = mutableListOf<Exercise>()
+                                    for (exerciseDoc in exerciceDocs) {
+                                        val exerciseName = exerciseDoc.getLong(NAME_FIELD) ?: 0
+                                        val exerciseObservation =
+                                            exerciseDoc.getString(OBSERVATIONS_FIELD) ?: ""
+                                        val exerciseImage =
+                                            exerciseDoc.getString(IMAGE_FIELD)?.let { uri ->
+                                                Uri.parse(uri)
+                                            }
+                                        val exerciseAuthor =
+                                            exerciseDoc.getString(AUTHOR_FIELD) ?: ""
+                                        val exercise = Exercise(
+                                            exerciseName,
+                                            exerciseImage,
+                                            exerciseObservation,
+                                            exerciseAuthor
+                                        )
+                                        exerciseList.add(exercise)
+                                    }
+                                    onSuccess(training, exerciseList)
+                                }
+
+                            } else {
+                                Log.w(TAG, "getTrainingByName: ", trainingTask.exception)
+                                onError()
+                            }
+                        }
+                }
+            } else {
+                Log.w(TAG, "getTrainingByName: ", trainingTask.exception!!)
+                onError()
+            }
+        }
+    }
+
+    fun getTrainingByNameRealTime(
+        userId: String,
+        name: Number,
+        onSuccess: (training: Training, exercises: List<Exercise>) -> Unit,
+        onError: () -> Unit = {}
+    ) {
+        val trainingRef = db.collection(TRAININGS_COLLECTION)
             .document(name.toString())
         trainingRef.addSnapshotListener { trainingDoc, e ->
             e?.let {
@@ -113,36 +170,42 @@ class FireStoreHelper(
         val trainingRef = db.collection(TRAININGS_COLLECTION)
             .document(training.name.toString())
         trainingRef.set(training, SetOptions.merge()).addOnSuccessListener {
-            for (exercise in exercises) {
-                try {
-                    exercise.image?.let {
-                        storage.saveImage(
-                            it,
-                            onSuccess = { storageUri ->
-                                exercise.image = storageUri
-                                trainingRef
-                                    .collection(EXERCISES_COLLECTION)
-                                    .document(exercise.name.toString())
-                                    .set(exercise, SetOptions.merge())
-                                    .addOnFailureListener { exception ->
-                                        throw exception
-                                    }
-                            },
-                            onError = onError
-                        )
-                    } ?: run {
-                        trainingRef
-                            .collection(EXERCISES_COLLECTION)
-                            .document(exercise.name.toString())
-                            .set(exercise).addOnFailureListener { exception ->
-                                throw exception
-                            }
+            if (exercises.isNotEmpty()){
+                for (exercise in exercises) {
+                    try {
+                        exercise.image?.let {
+                            storage.saveImage(
+                                it,
+                                onSuccess = { storageUri ->
+                                    exercise.image = storageUri
+                                    trainingRef
+                                        .collection(EXERCISES_COLLECTION)
+                                        .document(exercise.name.toString())
+                                        .set(exercise, SetOptions.merge())
+                                        .addOnFailureListener { exception ->
+                                            throw exception
+                                        }
+                                },
+                                onError = onError
+                            )
+                        } ?: run {
+                            trainingRef
+                                .collection(EXERCISES_COLLECTION)
+                                .document(exercise.name.toString())
+                                .set(exercise).addOnFailureListener { exception ->
+                                    Log.w(TAG, "saveTraining: ", exception)
+                                    onError()
+                                }
+                        }
+                        onSuccess()
+                    } catch (e: Exception) {
+                        onError()
                     }
-                    onSuccess()
-                } catch (e: Exception) {
-                    onError()
                 }
+            }else {
+                onSuccess()
             }
+
         }.addOnFailureListener {
             Log.w(TAG, "addTraining: ", it)
             onError()
@@ -162,10 +225,6 @@ class FireStoreHelper(
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     for (document in task.result!!) {
-                        val image = document.getString(IMAGE_FIELD)
-                        image?.let {
-                            storage.deleteImage(it)
-                        }
                         document.reference.delete()
                     }
                     trainingRef.delete()

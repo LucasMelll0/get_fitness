@@ -1,8 +1,10 @@
 package com.example.getfitness.extensions
 
+import android.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
+import com.example.getfitness.R
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -11,11 +13,11 @@ fun Fragment.goToBack() {
 }
 
 fun Fragment.goTo(destination: Int) {
-    findNavController().navigate(destination)
+    findNavController().safeNavigate(destination)
 }
 
 fun Fragment.goTo(action: NavDirections) {
-    findNavController().navigate(action)
+    findNavController().safeNavigate(action)
 }
 
 fun Fragment.showSnackBar(message: String) {
@@ -26,4 +28,14 @@ fun Fragment.showSnackBar(message: String) {
             Snackbar.LENGTH_SHORT
         ).show()
     }
+}
+
+fun Fragment.showAlertDialog(message: String, onConfirm: () -> Unit = {}) {
+    val builder = AlertDialog.Builder(requireContext())
+    builder.setMessage(message)
+        .setPositiveButton(getString(R.string.common_confirm)) { _, _ ->
+            onConfirm()
+        }
+        .setNegativeButton(getString(R.string.common_cancel), null)
+    builder.show()
 }

@@ -1,6 +1,5 @@
 package com.example.getfitness.ui.form
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +10,9 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentTrainingFormBinding
+import com.example.getfitness.extensions.goTo
 import com.example.getfitness.extensions.goToBack
+import com.example.getfitness.extensions.showAlertDialog
 import com.example.getfitness.extensions.showSnackBar
 import com.example.getfitness.model.Training
 import com.example.getfitness.ui.form.exerciseform.ExerciseFormDialogFragment
@@ -83,7 +84,7 @@ class TrainingFormFragment : Fragment() {
                     },
                     onError = {
                         showSnackBar(getString(R.string.common_get_training_error))
-                        goToBack()
+                        goTo(R.id.action_trainingFormFragment_to_feedFragment)
                     }
                 )
             } else {
@@ -186,7 +187,7 @@ class TrainingFormFragment : Fragment() {
         toolbar.inflateMenu(R.menu.menu_training_form)
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.menu_item_delete_trianing_form -> {
+                R.id.menu_item_delete_training_form -> {
                     showDeleteAlertDialog()
                     true
                 }
@@ -196,13 +197,8 @@ class TrainingFormFragment : Fragment() {
     }
 
     private fun showDeleteAlertDialog() {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setMessage(getString(R.string.fragment_training_form_alert_dialog_message))
-            .setPositiveButton(getString(R.string.common_confirm)) { _, _ ->
-                removeTraining()
-            }
-            .setNegativeButton(getString(R.string.common_cancel), null)
-        builder.show()
+        val message = getString(R.string.fragment_training_form_alert_dialog_message)
+        showAlertDialog(message, onConfirm = { removeTraining() })
     }
 
     private fun removeTraining() {
@@ -216,7 +212,7 @@ class TrainingFormFragment : Fragment() {
                         trainingName.toString(),
                         onSuccess = {
                             showSnackBar(getString(R.string.fragment_training_form_successfully_delete_training_message))
-                            goToBack()
+                            goTo(R.id.action_trainingFormFragment_to_feedFragment)
                         },
                         onError = {
                             progressBar(false)
