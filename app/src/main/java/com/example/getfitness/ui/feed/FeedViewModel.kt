@@ -28,6 +28,10 @@ class FeedViewModel(
         )
     }
 
+    fun removeAllTrainingsObserver() {
+        trainingRepository.removeAllTrainingsObserver()
+    }
+
     fun disconnect() {
         accountRepository.disconnect()
     }

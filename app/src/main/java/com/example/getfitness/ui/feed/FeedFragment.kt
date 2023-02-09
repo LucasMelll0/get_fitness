@@ -40,12 +40,13 @@ class FeedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         checkCurrentUser()
-        setsUpRecyclerView()
-        setsUpButtonAdd()
     }
 
     private fun checkCurrentUser() {
-        currentUser ?: goTo(R.id.action_feedFragment_to_loginFragment)
+        currentUser?.let {
+            setsUpRecyclerView()
+            setsUpButtonAdd()
+        } ?: goTo(R.id.action_feedFragment_to_loginFragment)
     }
 
     private fun setsUpToolbar() {
@@ -102,6 +103,7 @@ class FeedFragment : Fragment() {
 
     private fun disconnect() {
         currentUser?.let {
+            viewModel.removeAllTrainingsObserver()
             viewModel.disconnect()
             goTo(R.id.action_feedFragment_to_loginFragment)
         }

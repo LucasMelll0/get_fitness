@@ -17,6 +17,10 @@ class TrainingRepository(
         firebaseHelper.getAllTrainings(userId, onSuccess, onError)
     }
 
+    fun removeAllTrainingsObserver() {
+        firebaseHelper.removeAllTrainingsObserver()
+    }
+
     fun saveTraining(
         training: Training,
         exercises: List<Exercise>,

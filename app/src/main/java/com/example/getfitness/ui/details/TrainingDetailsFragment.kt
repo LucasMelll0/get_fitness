@@ -63,9 +63,11 @@ class TrainingDetailsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        trainingId?.let {
-            getTrainingByName(it)
-        } ?: goToBack()
+        context?.let {
+            trainingId?.let {
+                getTrainingByName(it)
+            } ?: goToBack()
+        }
     }
 
     private fun progressBar(visible: Boolean) {
@@ -89,8 +91,8 @@ class TrainingDetailsFragment : Fragment() {
                         progressBar(false)
                     },
                     onError = {
-                        showSnackBar(getString(R.string.common_get_training_error))
-                        goToBack()
+                            showSnackBar(getString(R.string.common_get_training_error))
+                            goToBack()
                     }
                 )
             } else {

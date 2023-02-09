@@ -51,6 +51,10 @@ class TrainingFormFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setsUpToolbar()
         setsUpButtonAddExercise()
+    }
+
+    override fun onStart() {
+        super.onStart()
         checkArgs()
     }
 

@@ -7,6 +7,7 @@ import com.example.getfitness.model.Training
 import com.example.getfitness.repository.*
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.SetOptions
 
 class FireStoreHelper(
@@ -14,22 +15,24 @@ class FireStoreHelper(
     private val storage: StorageHelper
 ) {
 
+    private var allTrainingsObserver: ListenerRegistration? = null
+
     fun getAllTrainings(
         userId: String,
         onSuccess: (trainings: List<Training>) -> Unit = {},
         onError: () -> Unit = {}
     ) {
-        db.collection(TRAININGS_COLLECTION)
+        allTrainingsObserver = db.collection(TRAININGS_COLLECTION)
             .whereEqualTo(AUTHOR_FIELD, userId)
             .addSnapshotListener { value, e ->
                 e?.let {
                     it.message?.let { message ->
+                        Log.w(TAG, "Listen Failed: ", e)
                         if (!message.contains("Not Found")) {
                             onError()
+                            return@addSnapshotListener
                         }
                     }
-                    Log.w(TAG, "Listen Failed: ", e)
-
                 } ?: run {
                     val trainings = mutableListOf<Training>()
                     for (doc in value!!) {
@@ -47,6 +50,10 @@ class FireStoreHelper(
                 }
             }
 
+    }
+
+    fun removeAllTrainingsObserver() {
+        allTrainingsObserver?.remove()
     }
 
     fun getTrainingByName(
@@ -70,9 +77,9 @@ class FireStoreHelper(
                         .get()
                         .addOnCompleteListener { exercisesTask ->
                             if (exercisesTask.isSuccessful) {
-                                exercisesTask.result?.let { exerciceDocs ->
+                                exercisesTask.result?.let { exerciseDocs ->
                                     val exerciseList = mutableListOf<Exercise>()
-                                    for (exerciseDoc in exerciceDocs) {
+                                    for (exerciseDoc in exerciseDocs) {
                                         val exerciseName = exerciseDoc.getLong(NAME_FIELD) ?: 0
                                         val exerciseObservation =
                                             exerciseDoc.getString(OBSERVATIONS_FIELD) ?: ""
@@ -118,6 +125,7 @@ class FireStoreHelper(
             e?.let {
                 Log.w(TAG, "getTrainingByName: ", it)
                 onError()
+                return@addSnapshotListener
             } ?: run {
                 trainingDoc?.let {
                     val trainingName = trainingDoc.getLong(NAME_FIELD) ?: 0
@@ -170,7 +178,7 @@ class FireStoreHelper(
         val trainingRef = db.collection(TRAININGS_COLLECTION)
             .document(training.name.toString())
         trainingRef.set(training, SetOptions.merge()).addOnSuccessListener {
-            if (exercises.isNotEmpty()){
+            if (exercises.isNotEmpty()) {
                 for (exercise in exercises) {
                     try {
                         exercise.image?.let {
@@ -202,7 +210,7 @@ class FireStoreHelper(
                         onError()
                     }
                 }
-            }else {
+            } else {
                 onSuccess()
             }
 
