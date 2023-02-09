@@ -14,11 +14,11 @@ import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentTrainingDetailsBinding
 import com.example.getfitness.extensions.goTo
 import com.example.getfitness.extensions.goToBack
+import com.example.getfitness.extensions.safeRun
 import com.example.getfitness.extensions.showSnackBar
 import com.example.getfitness.model.Training
 import com.example.getfitness.ui.details.bottomsheet.BottomSheetTrainingDescription
 import com.example.getfitness.ui.details.viewpager.ExerciseAdapter
-import com.example.getfitness.utils.checkConnection
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.firebase.auth.FirebaseAuth
 import org.koin.android.ext.android.inject
@@ -63,11 +63,9 @@ class TrainingDetailsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        context?.let {
-            trainingId?.let {
-                getTrainingByName(it)
-            } ?: goToBack()
-        }
+        trainingId?.let {
+            getTrainingByName(it)
+        } ?: goToBack()
     }
 
     private fun progressBar(visible: Boolean) {
@@ -79,8 +77,7 @@ class TrainingDetailsFragment : Fragment() {
 
     private fun getTrainingByName(name: Number) {
         currentUser?.let {
-            val connected = checkConnection(requireContext())
-            if (connected) {
+            safeRun(onOffline = { goToBack() }) {
                 setsUpObservers()
                 progressBar(true)
                 viewModel.getTrainingByName(
@@ -91,15 +88,13 @@ class TrainingDetailsFragment : Fragment() {
                         progressBar(false)
                     },
                     onError = {
+                        context?.let {
                             showSnackBar(getString(R.string.common_get_training_error))
                             goToBack()
+                        }
                     }
                 )
-            } else {
-                showSnackBar(getString(R.string.common_offline_message))
-                goToBack()
             }
-
         } ?: goToBack()
 
     }

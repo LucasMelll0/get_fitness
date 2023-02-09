@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment
 import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentLoginBinding
 import com.example.getfitness.extensions.goTo
+import com.example.getfitness.extensions.safeRun
 import com.example.getfitness.extensions.showSnackBar
 import com.example.getfitness.model.User
-import com.example.getfitness.utils.checkConnection
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : Fragment() {
@@ -68,8 +68,7 @@ class LoginFragment : Fragment() {
         val email = binding.edittextEmailLogin.editText!!.text.toString().trim()
         val password = binding.edittextPasswordLogin.editText!!.text.toString().trim()
         val user = userFactory(email, password)
-        val connected = checkConnection(requireContext())
-        if (connected){
+        safeRun(onOffline = { progressBar(false) }) {
             viewModel.connect(
                 user,
                 onSuccess = { goTo(R.id.action_loginFragment_to_feedFragment) },
@@ -78,9 +77,6 @@ class LoginFragment : Fragment() {
                     showSnackBar(getString(R.string.fragment_login_submit_error))
                 }
             )
-        }else {
-            progressBar(false)
-            showSnackBar(getString(R.string.common_offline_message))
         }
     }
 

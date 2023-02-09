@@ -10,12 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentFeedBinding
-import com.example.getfitness.extensions.goTo
-import com.example.getfitness.extensions.goToBack
-import com.example.getfitness.extensions.showAlertDialog
-import com.example.getfitness.extensions.showSnackBar
+import com.example.getfitness.extensions.*
 import com.example.getfitness.ui.feed.recyclerview.TrainingAdapter
-import com.example.getfitness.utils.checkConnection
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.firebase.auth.FirebaseAuth
 import org.koin.android.ext.android.inject
@@ -167,8 +163,7 @@ class FeedFragment : Fragment() {
 
     private fun tryGetAllTrainings() {
         currentUser?.let {
-            val connected = checkConnection(requireContext())
-            if (connected) {
+            safeRun {
                 progressBar(true)
                 viewModel.getAllTrainings(
                     it.uid,
@@ -180,12 +175,8 @@ class FeedFragment : Fragment() {
                         showSnackBar(getString(R.string.fragment_feed_get_trainings_error))
                     }
                 )
-            } else {
-                showSnackBar(getString(R.string.common_offline_message))
             }
-
         } ?: goToBack()
-
     }
 
     private fun emptyListMessage(visible: Boolean) {

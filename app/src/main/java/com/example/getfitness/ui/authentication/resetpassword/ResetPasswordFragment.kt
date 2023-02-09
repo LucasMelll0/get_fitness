@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentResetPasswordBinding
 import com.example.getfitness.extensions.goToBack
+import com.example.getfitness.extensions.safeRun
 import com.example.getfitness.extensions.showSnackBar
-import com.example.getfitness.utils.checkConnection
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -57,8 +57,7 @@ class ResetPasswordFragment : Fragment() {
 
     private fun sendPasswordResetEmail() {
         val email = binding.edittextEmailResetPassword.editText!!.text.toString().trim()
-        val connected = checkConnection(requireContext())
-        if (connected) {
+        safeRun(onOffline = { progressBar(false) }) {
             viewModel.sendPasswordResetEmail(
                 email,
                 onSuccess = {
@@ -70,9 +69,6 @@ class ResetPasswordFragment : Fragment() {
                     showSnackBar(getString(R.string.common_error_message))
                 }
             )
-        } else {
-            progressBar(false)
-            showSnackBar(getString(R.string.common_offline_message))
         }
     }
 

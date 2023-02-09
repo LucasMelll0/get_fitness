@@ -9,9 +9,9 @@ import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentRegisterBinding
 import com.example.getfitness.extensions.goTo
 import com.example.getfitness.extensions.goToBack
+import com.example.getfitness.extensions.safeRun
 import com.example.getfitness.extensions.showSnackBar
 import com.example.getfitness.model.User
-import com.example.getfitness.utils.checkConnection
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -54,8 +54,7 @@ class RegisterFragment : Fragment() {
         val email = binding.edittextEmailRegister.editText!!.text.toString().trim()
         val password = binding.edittextPasswordRegister.editText!!.text.toString().trim()
         val user = userFactory(name, email, password)
-        val connected = checkConnection(requireContext())
-        if (connected) {
+        safeRun(onOffline = { progressBar(false) }) {
             viewModel.register(
                 user,
                 onSuccess = {
@@ -68,9 +67,6 @@ class RegisterFragment : Fragment() {
                     errorHandler(it)
                 }
             )
-        } else {
-            progressBar(false)
-            showSnackBar(getString(R.string.common_offline_message))
         }
     }
 

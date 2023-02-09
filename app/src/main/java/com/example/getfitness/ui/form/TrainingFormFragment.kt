@@ -10,14 +10,10 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.getfitness.R
 import com.example.getfitness.databinding.FragmentTrainingFormBinding
-import com.example.getfitness.extensions.goTo
-import com.example.getfitness.extensions.goToBack
-import com.example.getfitness.extensions.showAlertDialog
-import com.example.getfitness.extensions.showSnackBar
+import com.example.getfitness.extensions.*
 import com.example.getfitness.model.Training
 import com.example.getfitness.ui.form.exerciseform.ExerciseFormDialogFragment
 import com.example.getfitness.ui.form.recyclerview.ExerciseFormAdapter
-import com.example.getfitness.utils.checkConnection
 import com.example.getfitness.utils.formatMillisToTimestamp
 import com.example.getfitness.utils.formatTimestamp
 import com.example.getfitness.utils.getDatePicker
@@ -76,8 +72,7 @@ class TrainingFormFragment : Fragment() {
 
     private fun getTraining() {
         currentUser?.let { user ->
-            val connected = checkConnection(requireContext())
-            if (connected) {
+            safeRun(onOffline = { goToBack() }) {
                 progressBar(true)
                 viewModel.getByTrainingName(
                     user.uid,
@@ -91,11 +86,7 @@ class TrainingFormFragment : Fragment() {
                         goTo(R.id.action_trainingFormFragment_to_feedFragment)
                     }
                 )
-            } else {
-                showSnackBar(getString(R.string.common_offline_message))
-                goToBack()
             }
-
         }
     }
 
@@ -208,8 +199,7 @@ class TrainingFormFragment : Fragment() {
     private fun removeTraining() {
         trainingName?.let {
             currentUser?.let {
-                val connected = checkConnection(requireContext())
-                if (connected) {
+                safeRun(onOffline = { progressBar(false) }) {
                     progressBar(true)
                     viewModel.removeTraining(
                         it.uid,
@@ -223,19 +213,14 @@ class TrainingFormFragment : Fragment() {
                             showSnackBar(getString(R.string.fragment_training_form_delete_training_error))
                         }
                     )
-                } else {
-                    progressBar(false)
-                    showSnackBar(getString(R.string.common_offline_message))
                 }
-
             }
         } ?: goToBack()
     }
 
     private fun saveTraining() {
         if (noEmptyFields()) {
-            val connected = checkConnection(requireContext())
-            if (connected) {
+            safeRun(onOffline = { progressBar(false) }) {
                 val training = createTraining()
                 training?.let {
                     progressBar(true)
@@ -266,11 +251,7 @@ class TrainingFormFragment : Fragment() {
                         )
                     }
                 }
-            } else {
-                progressBar(false)
-                showSnackBar(getString(R.string.common_offline_message))
             }
-
         }
     }
 
