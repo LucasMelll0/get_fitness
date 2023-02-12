@@ -42,6 +42,7 @@ class FeedFragment : Fragment() {
         currentUser?.let {
             setsUpRecyclerView()
             setsUpButtonAdd()
+            setsUpToolbar()
         } ?: goTo(R.id.action_feedFragment_to_loginFragment)
     }
 
@@ -136,7 +137,6 @@ class FeedFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        setsUpToolbar()
         setsUpTrainingsObserver()
         tryGetAllTrainings()
     }
@@ -185,7 +185,7 @@ class FeedFragment : Fragment() {
     }
 
     private fun setsUpTrainingsObserver() {
-        viewModel.trainings.observe(this@FeedFragment) {
+        viewModel.trainings.observe(viewLifecycleOwner) {
             adapter.submitList(it)
             if (it.isEmpty()) {
                 emptyListMessage(true)
