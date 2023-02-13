@@ -137,8 +137,21 @@ class FeedFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        currentUser ?: goTo(R.id.action_feedFragment_to_loginFragment)
         setsUpTrainingsObserver()
         tryGetAllTrainings()
+        setsUpSwipeRefresh()
+    }
+
+    private fun setsUpSwipeRefresh() {
+        val swipeRefresh = binding.swipeRefresh
+        swipeRefresh.setOnRefreshListener {
+            viewModel.getAllTrainings(
+                currentUser!!.uid,
+                onSuccess = { swipeRefresh.isRefreshing = false },
+                onError = { showSnackBar(getString(R.string.fragment_feed_get_trainings_error)) }
+            )
+        }
     }
 
     override fun onResume() {
