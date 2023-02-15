@@ -39,6 +39,10 @@ android {
 
 dependencies {
 
+    // Animations
+    def lottie_version = "6.0.0"
+    implementation "com.airbnb.android:lottie:$lottie_version"
+
 
     // User Auth
     implementation 'com.google.firebase:firebase-auth-ktx:21.1.0'
