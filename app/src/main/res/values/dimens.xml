@@ -16,4 +16,5 @@
     <dimen name="recyclerview_height_exercise_form">200dp</dimen>
     <dimen name="default_bottom_sheet_pull_dismiss_width">50dp</dimen>
     <dimen name="default_bottom_sheet_pull_dismiss_height">10dp</dimen>
+    <dimen name="default_loading_dimensions">60dp</dimen>
 </resources>

@@ -37,16 +37,10 @@ class StorageHelper(
                 }
 
 
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Log.w(TAG, "saveImage: ", e)
         }
 
     }
 
-    fun deleteImage(image: String) {
-        val imageRef = storageReference.child(image)
-        imageRef.delete()
-            .addOnSuccessListener { Log.i(TAG, "deleteImage: Image Deleted successfully") }
-            .addOnFailureListener { Log.w(TAG, "deleteImage: ", it) }
-    }
 }

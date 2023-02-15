@@ -27,12 +27,13 @@
             app:layout_constraintTop_toTopOf="parent"
             app:strokeColor="@color/secondary"
             tools:visibility="visible">
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/default_margin"
-                android:indeterminateTint="@color/primary_variant" />
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                app:lottie_rawRes="@raw/loading"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                />
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.appbar.MaterialToolbar

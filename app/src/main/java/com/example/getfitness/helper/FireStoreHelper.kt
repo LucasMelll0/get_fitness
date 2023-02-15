@@ -259,10 +259,6 @@ class FireStoreHelper(
                     for (document in task.result!!) {
                         val name = document.getLong(NAME_FIELD) ?: 0
                         if (exercises.none { it.name == name }) {
-                            val image = document.getString(IMAGE_FIELD)
-                            image?.let {
-                                storage.deleteImage(it)
-                            }
                             document.reference.delete()
                         }
 
